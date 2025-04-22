@@ -10,7 +10,7 @@ git clone https://github.com/samueltl21/restaurantreview.git
 2. Change to the directory:
 cd restaurantreview
 
-3. Create a virtual environment
+3. Create a virtual environment:
 python3 -m venv application-env
 
 4. Activate
@@ -19,8 +19,8 @@ source application-env/bin/activate
 Windows:
 application-env\Scripts\activate
 
-5. Install all required dependancies from requirement.txt
+5. Install all required dependancies from requirements.txt:
 pip install -r requirements.txt 
 
-6. Run the Flask app
+6. Run the Flask app:
 flask run
