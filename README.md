@@ -13,8 +13,14 @@ cd restaurantreview
 3. Create a virtual environment
 python3 -m venv application-env
 
-4. Install all required dependancies from requirement.txt
+4. Activate
+macOS:
+source application-env/bin/activate
+Windows:
+application-env\Scripts\activate
+
+5. Install all required dependancies from requirement.txt
 pip install -r requirements.txt 
 
-5. Run the Flask app
+6. Run the Flask app
 flask run
