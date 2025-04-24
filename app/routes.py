@@ -4,3 +4,9 @@ from flask import render_template
 @application.route('/')
 def index():
     return render_template('home.html')
+@application.route('/login')
+def login():
+    return render_template('login.html')
+@application.route('/sign_up')
+def signup():
+    return render_template('sign_up.html')
