@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Login - RestaurantReview{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="login-container">
+    <h1>Access Your Account</h1>
+    <form id="login-form">
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" aria-label="Email" placeholder="Enter your email" required>
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" aria-label="Password" placeholder="Enter your password" autocomplete="off" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+    </form>
+    <div class="signup-link">
+        Don't have an account? <a href="{{ url_for('sign_up') }}">Sign up</a>
+    </div>
+</div>
+{% endblock %}
