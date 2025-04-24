@@ -40,6 +40,8 @@ document.getElementById('login-form').addEventListener('submit', function (event
     // Temporary placeholder for success message
     alert('Login successful!');
 });
+
+// This is the JavaScript for the registration page
 // Add an event listener to the sign-up form to handle form submission
 document.getElementById('signup-form').addEventListener('submit', function(event) {
     // Prevent the form's default submission behavior (e.g., page reload)
