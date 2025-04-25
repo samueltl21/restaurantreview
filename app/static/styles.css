@@ -63,10 +63,6 @@ body {
     top: calc(50vh - 50%);
 }
 
-.registration-container {
-    margin-top: 5rem; 
-}
-
 /* Title styles */
 .login-container h1,
 .registration-container h1 {
