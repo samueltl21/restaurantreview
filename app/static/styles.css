@@ -44,43 +44,42 @@ body {
     border: 1px solid #ffffff;
 }
 
-/* Styling for titles in login and registration containers */
+/* Container styles for login and registration */
 .login-container,
 .registration-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(245, 245, 245, 0.8); 
-    padding: 2.5rem 2rem;
+    background-color: rgba(245, 245, 245, 0.6);
+    padding: 1.5rem 1rem;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    width: 90%; 
+    width: 90%;
     max-width: 400px;
-    max-height: 90vh; 
-    margin: 2rem auto; 
+    max-height: 75vh;
+    overflow-y: auto;
+    margin: 2rem auto;
 }
 
-/* Registration  margin-top */
 .registration-container {
-    margin-top: 1.5rem; 
+    margin-top: 1rem;
 }
 
-/* Styling for titles in login and registration containers */
+/* Title styles */
 .login-container h1,
 .registration-container h1 {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: #000000;
     text-align: center;
 }
 
-/* Input group styling */
+/* Input group styles */
 .input-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-/* Label styling in input groups */
 .input-group label {
     display: block;
     margin-bottom: 0.5rem;
@@ -88,30 +87,28 @@ body {
     color: #9d9e9d;
 }
 
-/* Input field styling */
 .input-group input {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.5rem;
     border: 1px solid #9d9e9d;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     box-sizing: border-box;
     transition: all 0.2s ease-in-out;
 }
 
-/* Focus effect for input fields */
 .input-group input:focus {
     border-color: #7c83ff;
     outline: none;
     box-shadow: 0 0 4px rgba(124, 131, 255, 0.2);
 }
 
-/* General button styling */
+/* General button styles */
 .btn {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.5rem;
     color: #ffffff;
-    font-size: 1rem;
+    font-size: 0.9rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -119,33 +116,30 @@ body {
     transition: background-color 0.2s ease-in-out;
 }
 
-/* Hover effect for general buttons */
 .btn:hover {
     background-color: #000000;
     color: #ffffff;
     border: 1px solid #ffffff;
 }
 
-/* Link styling for login and sign-up pages */
+/* Link styles */
 .link {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     text-align: center;
     color: #9d9e9d;
     font-size: 0.85rem;
 }
 
-/* Styling for links */
 .link a {
     color: #7c83ff;
     text-decoration: none;
 }
 
-/* Hover effect for links */
 .link a:hover {
     text-decoration: underline;
 }
 
-/* Footer styling to prevent overlapping with containers */
+/* Footer styles */
 footer {
     position: fixed;
     bottom: 0;
