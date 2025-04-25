@@ -51,7 +51,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(245, 245, 245, 0.6);
+    background-color: rgba(245, 245, 245, 0.9); /* Reduced transparency for better visibility */
     padding: 1.5rem 1rem;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -59,11 +59,11 @@ body {
     max-width: 400px;
     max-height: 75vh;
     overflow-y: auto;
-    margin: 2rem auto;
+    margin: 4rem auto; /* Increased margin to move containers down */
 }
 
 .registration-container {
-    margin-top: 1rem;
+    margin-top: 5rem; /* Adjusted margin to move registration container further down */
 }
 
 /* Title styles */
