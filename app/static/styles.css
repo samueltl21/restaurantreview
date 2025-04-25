@@ -46,7 +46,7 @@ body {
 /* Set the style for the login page */
 body {
     font-family: Arial, sans-serif;
-    background: url('../image/login.jpg') no-repeat center center/cover;
+    background: url('./image/login.jpg') no-repeat center center/cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -149,10 +149,11 @@ body {
 .signup-link a:hover {
     text-decoration: underline;
 }
+
 /* Set the style for the registration page */
 body {
     font-family: Arial, sans-serif;
-    background: url('../image/sign_up.jpg') no-repeat center center/cover;
+    background: url('./image/sign_up.jpg') no-repeat center center/cover;
     display: flex; 
     justify-content: center;
     align-items: center; 
