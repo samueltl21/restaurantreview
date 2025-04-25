@@ -45,19 +45,8 @@ document.getElementById('login-form').addEventListener('submit', function (event
 // Add an event listener to the sign-up form to handle form submission
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('signup-form').addEventListener('submit', function (event) {
-        event.preventDefault();
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-
-        alert('Sign up successful!');
-    });
-});
-
+        event.preventDefault(); 
+    
     // Get the values of the password and confirm password fields
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
