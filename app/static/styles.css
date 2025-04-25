@@ -43,19 +43,8 @@ body {
     background-color: #000000;
     border: 1px solid #ffffff;
 }
-/* Set the style for the login page */
-body {
-    font-family: Arial, sans-serif;
-    background: url('./image/login.jpg') no-repeat center center/cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    position: relative;
-}
 
-/* Create an overlay with a semi-transparent black background */
+/* Overlay styling */
 .overlay {
     position: absolute;
     top: 0;
@@ -66,32 +55,26 @@ body {
     z-index: -1;
 }
 
-/* Style the login container */
-.login-container {
-    /* Set a semi-transparent white background */
+/* Container styling for login and registration forms */
+.container {
     background: rgba(255, 255, 255, 0.85);
-    /* Add some padding */
     padding: 4rem;
-    /* Add rounded corners */
     border-radius: 8px;
-    /* Add a subtle box shadow */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Ensure the container has a maximum width */
     width: 100%;
     max-width: 400px;
-    /* Ensure the container is above the overlay */
     z-index: 1;
 }
 
-/* Style the login container header */
-.login-container h1 {
+/* Form title styling */
+.container h1 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
     color: #333333;
     text-align: center;
 }
 
-/* Style the input groups */
+/* Input group styling */
 .input-group {
     margin-bottom: 1rem;
 }
@@ -113,147 +96,60 @@ body {
 }
 
 .input-group input:focus {
-    border-color: #007BFF;
+    border-color: #7c83ff;
     outline: none;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 0 4px rgba(124, 131, 255, 0.2);
 }
 
-/* Style the login button */
+/* Button specific to login */
 .login-btn {
     width: 100%;
     padding: 0.75rem;
-    background-color: #007BFF;
+    background-color: #7c83ff;
     color: #ffffff;
     font-size: 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-align: center;
 }
 
 .login-btn:hover {
-    background-color: #0056b3;
+    background-color: #000000;
 }
 
-/* Style the sign-up link */
+/* Button specific to sign-up */
+.register-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #9d9e9d;
+    color: #ffffff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.register-btn:hover {
+    background-color: #000000;
+}
+
+/* Login link styling */
+.login-link,
 .signup-link {
     margin-top: 1rem;
     text-align: center;
     color: #555555;
 }
 
+.login-link a,
 .signup-link a {
-    color: #007BFF;
+    color: #7c83ff;
     text-decoration: none;
 }
 
+.login-link a:hover,
 .signup-link a:hover {
     text-decoration: underline;
-}
-
-/* Set the style for the registration page */
-body {
-    font-family: Arial, sans-serif;
-    background: url('./image/sign_up.jpg') no-repeat center center/cover;
-    display: flex; 
-    justify-content: center;
-    align-items: center; 
-    height: 100vh;
-    margin: 0; 
-    position: relative; 
-}
-
-/* Styles for the semi-transparent overlay */
-.overlay {
-    position: absolute; 
-    top: 0; 
-    left: 0;
-    width: 100%; 
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: -1; 
-}
-
-/* Container for the registration form */
-.registration-container {
-    background: rgba(255, 255, 255, 0.85); 
-    padding: 4rem; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px; 
-    z-index: 1; 
-}
-
-/* Style for the form's title */
-.registration-container h1 {
-    font-size: 1.5rem; 
-    margin-bottom: 1.5rem; 
-    color: #333333;
-    text-align: center;
-}
-
-/* Style for input groups (label + input) */
-.input-group {
-    margin-bottom: 1rem;
-}
-
-/* Style for labels */
-.input-group label {
-    display: block;
-    margin-bottom: 0.5rem; 
-    font-weight: bold; 
-    color: #555555;
-}
-
-/* Style for input fields */
-.input-group input {
-    width: 100%; 
-    padding: 0.75rem; 
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    font-size: 1rem; 
-    box-sizing: border-box;
-}
-
-/* Focus styles for input fields */
-.input-group input:focus {
-    border-color: #007BFF;
-    outline: none; 
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.2); 
-}
-
-/* Style for the sign-up button */
-.register-btn {
-    width: 100%; 
-    padding: 0.75rem; 
-    background-color: #28a745; 
-    color: #ffffff; 
-    font-size: 1rem; 
-    border: none;
-    border-radius: 4px;
-    cursor: pointer; 
-    text-align: center;
-}
-
-/* Hover effect for the sign-up button */
-.register-btn:hover {
-    background-color: #218838;
-}
-
-/* Style for the login link */
-.login-link {
-    margin-top: 1rem;
-    text-align: center;
-    color: #555555; 
-}
-
-/* Style for the login link anchor tag */
-.login-link a {
-    color: #007BFF;
-    text-decoration: none; 
-}
-
-/* Hover effect for the login link anchor tag */
-.login-link a:hover {
-    text-decoration: underline; 
 }
