@@ -3,33 +3,29 @@
 {% block title %}Sign Up - RestaurantReview{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-6 col-lg-4">
-            <h1>Create Your Account</h1>
-            <form id="signup-form">
-                <div class="input-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" aria-label="Full Name" placeholder="Enter your full name" required>
-                </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" aria-label="Email" placeholder="Enter your email" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" aria-label="Password" placeholder="Create a password" autocomplete="off" required>
-                </div>
-                <div class="input-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" aria-label="Confirm Password" placeholder="Confirm your password" autocomplete="off" required>
-                </div>
-                <button type="submit" class="btn btn-register">Sign Up</button>
-            </form>
-            <div class="form-link">
-                Already have an account? <a href="{{ url_for('login') }}">Login</a>
-            </div>
+<div class="registration-container">
+    <h1>Create Your Account</h1>
+    <form id="signup-form">
+        <div class="input-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" aria-label="Full Name" placeholder="Enter your full name" required>
         </div>
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" aria-label="Email" placeholder="Enter your email" required>
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" aria-label="Password" placeholder="Create a password" autocomplete="off" required>
+        </div>
+        <div class="input-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" aria-label="Confirm Password" placeholder="Confirm your password" autocomplete="off" required>
+        </div>
+        <button type="submit" class="btn btn-register">Sign Up</button>
+    </form>
+    <div class="form-link">
+        Already have an account? <a href="{{ url_for('login') }}">Login</a>
     </div>
 </div>
 {% endblock %}
