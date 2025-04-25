@@ -1,0 +1,57 @@
+{% extends "base.html" %} {% block title %}My Profile | RestaurantReview{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Profile Info -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <!-- Avatar -->
+          <img
+            src="/static/images/default-avatar.png"
+            class="profile-avatar mb-3"
+            alt="Avatar"
+            style="
+              width: 100px;
+              height: 100px;
+              border-radius: 50%;
+              object-fit: cover;
+            "
+          />
+          <!-- Username -->
+          <h5 class="card-title">Example</h5>
+          <!-- Email -->
+          <p class="text-muted">test@example.com</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Summary -->
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-light">📊 Your Dining Preference</div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              🍱 Most Frequently Eaten Category:
+              <strong>Japanese</strong>
+            </li>
+            <li class="list-group-item">
+              🏆 Your Highest Rated Restaurant:
+              <strong>Bella Pasta（4.9/5）</strong>
+            </li>
+            <li class="list-group-item">
+              📌 Favorite Restaurant:
+              <strong>Tokyo Sushi Bar（3 times）</strong>
+            </li>
+            <li class="list-group-item">
+              📅 Latest Dining:
+              <strong>2025-04-20 at Burger Town</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
