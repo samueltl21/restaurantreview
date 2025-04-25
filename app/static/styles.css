@@ -28,13 +28,15 @@ body {
 }
 
 .btn-login {
-    background-color: #9d9e9d;
+    background-color: #7c83ff;
     color: white;
+    border-radius: 20px;
 }
 
 .btn-register {
     background-color: #7c83ff;
     color: white;
+    border-radius: 20px;
 }
 
 .btn-login:hover,
