@@ -44,22 +44,26 @@ body {
     border: 1px solid #ffffff;
 }
 
-/* Define login and registration containers separately to avoid style conflicts */
+/* Styling for titles in login and registration containers */
 .login-container,
 .registration-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(245, 245, 245, 0.9); /* Increased transparency */
+    background-color: rgba(245, 245, 245, 0.8); 
     padding: 2.5rem 2rem;
-    border-radius: 0; /* Square corners for the container */
+    border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     width: 90%; 
     max-width: 400px;
-    max-height: 90vh; /* Increased height to reduce clipping */
-    overflow-y: auto; /* Enable scrolling if content overflows */
-    margin: 4rem auto;
+    max-height: 90vh; 
+    margin: 2rem auto; 
+}
+
+/* Registration  margin-top */
+.registration-container {
+    margin-top: 1.5rem; 
 }
 
 /* Styling for titles in login and registration containers */
@@ -89,7 +93,7 @@ body {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #9d9e9d;
-    border-radius: 8px; /* Rounded corners for inputs */
+    border-radius: 8px;
     font-size: 1rem;
     box-sizing: border-box;
     transition: all 0.2s ease-in-out;
@@ -109,7 +113,7 @@ body {
     color: #ffffff;
     font-size: 1rem;
     border: none;
-    border-radius: 8px; /* Rounded corners for button */
+    border-radius: 8px;
     cursor: pointer;
     text-align: center;
     transition: background-color 0.2s ease-in-out;
