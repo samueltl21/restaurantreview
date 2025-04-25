@@ -75,6 +75,7 @@ body {
 /* Input group styles */
 .input-group {
     margin-bottom: 1rem;
+    overflow: visible;
 }
 
 .input-group label {
@@ -98,6 +99,7 @@ body {
     border-color: #7c83ff;
     outline: none;
     box-shadow: 0 0 4px rgba(124, 131, 255, 0.2);
+    border-radius: 8px;
 }
 
 /* General button styles */
