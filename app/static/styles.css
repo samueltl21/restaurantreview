@@ -51,16 +51,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f5f5f5;
+    background-color: rgba(245, 245, 245, 0.9); /* Increased transparency */
     padding: 2.5rem 2rem;
-    border-radius: 20px;
+    border-radius: 0; /* Square corners for the container */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     width: 90%; 
-    max-width: 400px; 
-    max-height: 80vh; 
+    max-width: 400px;
+    max-height: 90vh; /* Increased height to reduce clipping */
+    overflow-y: auto; /* Enable scrolling if content overflows */
     margin: 4rem auto;
 }
-    
+
 /* Styling for titles in login and registration containers */
 .login-container h1,
 .registration-container h1 {
@@ -88,7 +89,7 @@ body {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #9d9e9d;
-    border-radius: 4px;
+    border-radius: 8px; /* Rounded corners for inputs */
     font-size: 1rem;
     box-sizing: border-box;
     transition: all 0.2s ease-in-out;
@@ -108,7 +109,7 @@ body {
     color: #ffffff;
     font-size: 1rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px; /* Rounded corners for button */
     cursor: pointer;
     text-align: center;
     transition: background-color 0.2s ease-in-out;
