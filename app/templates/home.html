@@ -9,8 +9,8 @@
         <div class="home-title text-center text-white position-absolute top-50 start-50 translate-middle">
             <h1 class="display-4">Welcome to RestaurantReview!</h1>
             <p class="lead">Taste it. Rate it. Share it.</p>
-            <button class="btn btn-login" onclick="showMessage()">Login</button>
-            <button class="btn btn-register" onclick="showMessage()">Register</button>
+            <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-register">Sign Up</a>
           </div>
     </div>
 
