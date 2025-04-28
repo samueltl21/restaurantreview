@@ -44,3 +44,7 @@ def sign_up():
         return redirect(url_for('login'))
 
     return render_template('sign_up.html')
+
+@application.route('/restaurants')
+def restaurants():
+    return render_template('restaurants.html')
