@@ -33,11 +33,25 @@
 
     {% block content %}{% endblock %}
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mt-3" style="max-width: 500px;">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show text-center"
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container text-center">
             <p>&copy; 2025 RestaurantReview.</p>
             <p>
-                <a href="/about" class="text-white text-decoration-none">About Us</a> | 
+                <a href="/about" class="text-white text-decoration-none">About Us</a> |
                 <a href="/contact" class="text-white text-decoration-none">Contact</a>
             </p>
         </div>
