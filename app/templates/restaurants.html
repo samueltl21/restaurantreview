@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}FlavorTown Restaurant{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #d3d3d3;">
+    <div class="card p-4 shadow-sm" style="max-width: 800px; width: 100%;">
+
+        <div class="text-center mb-4">
+            <h1 class="display-5">Welcome to FlavorTown</h1>
+            <p class="lead">Deliciousness jumping into the mouth!</p>
+        </div>
+
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='images/home-food.jpg') }}" alt="Restaurant Image" class="img-fluid rounded">
+        </div>
+
+        <div class="text-center mb-4">
+            <h2>About Us</h2>
+            <p>At FlavorTown, we bring you an unforgettable dining experience with dishes crafted from the freshest ingredients and spices that dance on your taste buds.</p>
+        </div>
+
+        <div class="text-center mb-4">
+            <h2>Our Menu</h2>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>Spicy Ramen</h5>
+                    <p>A rich and flavorful broth served with handmade noodles and a variety of toppings.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Grilled Steak</h5>
+                    <p>Perfectly grilled Angus beef steak, seasoned to perfection, served with sides of your choice.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Chocolate Lava Cake</h5>
+                    <p>Warm, gooey chocolate cake with a molten center, served with vanilla ice cream.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <h2>Contact Us</h2>
+            <p>📍 123 Flavor Street, Food City</p>
+            <p>📞 (123) 456-7890</p>
+            <p>📧 contact@flavortown.com</p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
