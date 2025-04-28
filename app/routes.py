@@ -1,6 +1,8 @@
 from app import application, db
 from flask import render_template, request, redirect, url_for, flash
 from app.models import User
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 @application.route('/')
 def index():
@@ -18,6 +20,10 @@ def sign_up():
         password = request.form['password']
         confirm_password = request.form['confirm-password']
 
+        if not (name and email and password and confirm_password):
+            flash('All fields are required.', 'error')
+            return redirect(url_for('sign_up'))
+        
         if password != confirm_password:
             flash('Passwords do not match!', 'danger')
             return redirect(url_for('sign_up'))
@@ -28,8 +34,9 @@ def sign_up():
             flash('Email already registered!', 'danger')
             return redirect(url_for('sign_up'))
         
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         #create new user
-        new_user = User(name=name, email=email, password=password)
+        new_user = User(name=name, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
