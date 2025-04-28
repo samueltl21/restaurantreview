@@ -16,7 +16,7 @@ def sign_up():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        confirm_password = request.form['confirm-password']
 
         if password != confirm_password:
             flash('Passwords do not match!', 'danger')

@@ -3,7 +3,7 @@
 {% block title %}Sign Up - RestaurantReview{% endblock %}
  
 {% block content %}
-<form id="signup-form" class="auth-form">
+<form id="signup-form" class="auth-form" method="POST" action="{{ url_for('sign_up') }}">
     <h1>Create Your Account</h1>
     <div class="input-group">
         <label for="name">Full Name</label>
