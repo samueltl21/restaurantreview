@@ -1,5 +1,5 @@
 from app import application, db
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from app.models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -25,6 +25,8 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['user_name'] = user.name
             flash('Login successful!', 'success')
             return redirect(url_for('index'))
         else:
@@ -69,3 +71,9 @@ def sign_up():
 @application.route('/restaurants')
 def restaurants():
     return render_template('restaurants.html')
+
+@application.route('/logout')
+def logout():
+    session.clear()  # Clear all session data
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('index'))
