@@ -1,0 +1,323 @@
+{% extends "base.html" %} {% block title %}My Profile | RestaurantReview{%
+endblock %} {% block content %}
+<div class="container mt-4">
+  <!-- Profile Header with Animation: Removed -->
+
+  <div class="row">
+    <!-- Profile Info Card with Animation -->
+    <div class="col-md-4 mb-4">
+      <div class="card profile-card shadow animate-slide-right">
+        <div class="card-body text-center">
+          <!-- Avatar with hover effect -->
+          <div class="avatar-container mb-3">
+            <img
+              src="/static/images/default-avatar.png"
+              class="profile-avatar"
+              alt="Avatar"
+            />
+            <div class="avatar-overlay">
+              <i class="bi bi-camera"></i>
+            </div>
+          </div>
+          <!-- Username with animated underline -->
+          <h4 class="card-title fancy-title">Example</h4>
+          <!-- Email -->
+          <p class="text-muted">
+            <i class="bi bi-envelope-fill me-1"></i>test@example.com
+          </p>
+          <!-- Stats row -->
+          <div class="row mt-3 stats-row text-center">
+            <div class="col-4">
+              <div class="stat-circle">5</div>
+              <div class="stat-label">Reviews</div>
+            </div>
+            <div class="col-4">
+              <div class="stat-circle">4.4</div>
+              <div class="stat-label">Avg</div>
+            </div>
+            <div class="col-4">
+              <div class="stat-circle">5</div>
+              <div class="stat-label">Places</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Summary with Animation - Modified to match profile card height -->
+    <div class="col-md-8">
+      <div class="card preference-card shadow animate-slide-left h-100">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-pie-chart-fill me-2"></i> Your Dining Preferences
+        </div>
+        <div class="card-body d-flex flex-column justify-content-center">
+          <div class="row">
+            <!-- Most Frequent Category -->
+            <div class="col-md-6 mb-3">
+              <div class="preference-item">
+                <div class="preference-icon">
+                  <i class="bi bi-box2-heart"></i>
+                </div>
+                <div class="preference-content">
+                  <h6>Most Eaten Category</h6>
+                  <p class="mb-0"><strong>Japanese</strong></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Highest Rated -->
+            <div class="col-md-6 mb-3">
+              <div class="preference-item">
+                <div class="preference-icon">
+                  <i class="bi bi-trophy"></i>
+                </div>
+                <div class="preference-content">
+                  <h6>Highest Rated Restaurant</h6>
+                  <p class="mb-0">
+                    <strong>Bella Pasta</strong>
+                    <span class="rating-pill">4.9/5</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Favorite Restaurant -->
+            <div class="col-md-6 mb-3">
+              <div class="preference-item">
+                <div class="preference-icon">
+                  <i class="bi bi-pin-map"></i>
+                </div>
+                <div class="preference-content">
+                  <h6>Favorite Restaurant</h6>
+                  <p class="mb-0">
+                    <strong>Tokyo Sushi Bar</strong>
+                    <span class="visit-badge">3 visits</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Latest Dining -->
+            <div class="col-md-6 mb-3">
+              <div class="preference-item">
+                <div class="preference-icon">
+                  <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="preference-content">
+                  <h6>Latest Dining</h6>
+                  <p class="mb-0">
+                    <strong>Burger Town</strong>
+                    <span class="date-badge">Apr 20, 2025</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Small Stats Cards -->
+      <!-- <div class="row mt-3">
+        <div class="col-md-4 mb-3">
+          <div class="card mini-stat-card shadow animate-pop">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Total Spent</h6>
+                  <h3 class="mb-0">$160</h3>
+                </div>
+                <div class="mini-stat-icon">
+                  <i class="bi bi-cash-coin"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card mini-stat-card shadow animate-pop delay-1">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Cuisines</h6>
+                  <h3 class="mb-0">5</h3>
+                </div>
+                <div class="mini-stat-icon">
+                  <i class="bi bi-egg-fried"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card mini-stat-card shadow animate-pop delay-2">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">Avg Rating</h6>
+                  <h3 class="mb-0">4.4</h3>
+                </div>
+                <div class="mini-stat-icon">
+                  <i class="bi bi-star-half"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <!-- Reviews Table Card with Animation -->
+  <div class="card review-card shadow mb-4 animate-fade-up">
+    <div class="card-header bg-primary text-white">
+      <i class="bi bi-journal-richtext me-2"></i> Your Restaurant Reviews
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover review-table" id="reviewTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Restaurant</th>
+              <th>Address</th>
+              <th>Category</th>
+              <th>Rating</th>
+              <th>Spend</th>
+              <th>Recommend Dishes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-row-animate">
+              <td>2025-04-01</td>
+              <td class="fw-bold">Tokyo Sushi Bar</td>
+              <td>123 Main St, City A</td>
+              <td>
+                <span class="badge rounded-pill cuisine-badge japanese"
+                  >Japanese</span
+                >
+              </td>
+              <td>
+                <div class="star-rating">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half-filled">★</span>
+                </div>
+              </td>
+              <td>$35</td>
+              <td>Salmon Nigiri, Miso Soup</td>
+            </tr>
+            <tr class="table-row-animate">
+              <td>2025-04-08</td>
+              <td class="fw-bold">Bella Pasta</td>
+              <td>88 River Rd, City B</td>
+              <td>
+                <span class="badge rounded-pill cuisine-badge italian"
+                  >Italian</span
+                >
+              </td>
+              <td>
+                <div class="star-rating">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+              </td>
+              <td>$45</td>
+              <td>Carbonara, Tiramisu</td>
+            </tr>
+            <tr class="table-row-animate">
+              <td>2025-04-12</td>
+              <td class="fw-bold">The Curry Spot</td>
+              <td>77 Spice Ave, City C</td>
+              <td>
+                <span class="badge rounded-pill cuisine-badge indian"
+                  >Indian</span
+                >
+              </td>
+              <td>
+                <div class="star-rating">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+              </td>
+              <td>$28</td>
+              <td>Butter Chicken, Garlic Naan</td>
+            </tr>
+            <tr class="table-row-animate">
+              <td>2025-04-15</td>
+              <td class="fw-bold">Green Vegan</td>
+              <td>42 Plant Ln, City D</td>
+              <td>
+                <span class="badge rounded-pill cuisine-badge vegan"
+                  >Vegan</span
+                >
+              </td>
+              <td>
+                <div class="star-rating">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+              </td>
+              <td>$22</td>
+              <td>Quinoa Bowl, Avocado Toast</td>
+            </tr>
+            <tr class="table-row-animate">
+              <td>2025-04-20</td>
+              <td class="fw-bold">Burger Town</td>
+              <td>12 Grill St, City E</td>
+              <td>
+                <span class="badge rounded-pill cuisine-badge american"
+                  >American</span
+                >
+              </td>
+              <td>
+                <div class="star-rating">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half-filled">★</span>
+                </div>
+              </td>
+              <td>$30</td>
+              <td>Double Cheeseburger, Fries</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <nav aria-label="Review pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+              >Previous</a
+            >
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Add Review Button: Removed -->
+</div>
+
+<!-- Add reference to external JavaScript file -->
+<script src="/static/script.js"></script>
+{% endblock %}

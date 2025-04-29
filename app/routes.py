@@ -8,6 +8,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 def index():
     return render_template('home.html')
 
+@application.route('/profile')
+def profile():
+    return render_template('profile.html')
 @application.route('/login')
 def login():
     return render_template('login.html')
