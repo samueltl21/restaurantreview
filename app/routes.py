@@ -1,5 +1,5 @@
 from app import application, db
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from app.models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -11,8 +11,28 @@ def index():
 @application.route('/profile')
 def profile():
     return render_template('profile.html')
-@application.route('/login')
+
+@application.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        if not (email and password):
+            flash('All fields are required.', 'error')
+            return redirect(url_for('login'))
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['user_name'] = user.name
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid email or password!', 'danger')
+            return redirect(url_for('login'))
+        
     return render_template('login.html')
 
 @application.route('/sign_up', methods=['GET', 'POST'])
@@ -51,3 +71,9 @@ def sign_up():
 @application.route('/restaurants')
 def restaurants():
     return render_template('restaurants.html')
+
+@application.route('/logout')
+def logout():
+    session.clear()  # Clear all session data
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('index'))

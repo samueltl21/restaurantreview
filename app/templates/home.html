@@ -9,8 +9,10 @@
         <div class="home-title text-center text-white position-absolute top-50 start-50 translate-middle">
             <h1 class="display-4">Welcome to RestaurantReview!</h1>
             <p class="lead">Taste it. Rate it. Share it.</p>
-            <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
-            <a href="{{ url_for('sign_up') }}" class="btn btn-register">Sign Up</a>
+            {% if 'user_id' not in session %}
+                <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
+                <a href="{{ url_for('sign_up') }}" class="btn btn-register">Sign Up</a>
+            {% endif %}
           </div>
     </div>
 
