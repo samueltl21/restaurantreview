@@ -37,8 +37,6 @@
       </div>
     </nav>
 
-    {% block content %}{% endblock %}
-
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     <div class="container mt-3" style="max-width: 500px;">
@@ -52,6 +50,8 @@
     </div>
     {% endif %}
     {% endwith %}
+
+    {% block content %}{% endblock %}
 
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container text-center">
