@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/Users/cherryfeng/Downloads/2025 S1/5505_web_development/group_project/restaurantreview/application-env/bin/python3.12" "$0" "$@"
-' '''
+#!/Users/samueltl21/Documents/2025/2025S1/CITS5505_Agile_Web_Development/Projects/restaurantreview/application-env/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys
