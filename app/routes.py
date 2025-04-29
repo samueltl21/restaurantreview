@@ -11,8 +11,26 @@ def index():
 @application.route('/profile')
 def profile():
     return render_template('profile.html')
-@application.route('/login')
+
+@application.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        if not (email and password):
+            flash('All fields are required.', 'error')
+            return redirect(url_for('login'))
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and check_password_hash(user.password, password):
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid email or password!', 'danger')
+            return redirect(url_for('login'))
+        
     return render_template('login.html')
 
 @application.route('/sign_up', methods=['GET', 'POST'])

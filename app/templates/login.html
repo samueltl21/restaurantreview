@@ -3,7 +3,7 @@
 {% block title %}Login - RestaurantReview{% endblock %}
  
 {% block content %}
-<form id="login-form" class="auth-form">
+<form id="login-form" class="auth-form" method="POST" action="{{ url_for('login') }}">
     <h1>Login Your Account</h1>
     <div class="input-group">
         <label for="email">Email</label>
