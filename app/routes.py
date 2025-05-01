@@ -2,7 +2,16 @@ from app import application, db
 from flask import render_template, request, redirect, url_for, flash, session
 from app.models import User
 from werkzeug.security import generate_password_hash, check_password_hash
+import csv
+import os
 
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'csv'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @application.route('/')
 def index():
@@ -81,3 +90,25 @@ def logout():
     session.clear()  # Clear all session data
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
+
+@application.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        # Handle file upload
+        uploaded_file = request.files.get('file')
+        if uploaded_file and uploaded_file.filename.endswith('.csv'):
+            flash('CSV uploaded successfully!', 'success')
+        elif uploaded_file:
+            flash('Only CSV files are allowed.', 'danger')
+
+        # Handle restaurant rating
+        restaurant = request.form.get('restaurant')
+        rating = request.form.get('rating')
+        comments = request.form.get('comments')
+
+        if restaurant and rating:
+            flash(f"Thank you for rating {restaurant}!", 'success')
+        elif restaurant or rating:  # one is missing
+            flash("Both restaurant name and rating are required.", 'danger')
+
+    return render_template('upload.html')
