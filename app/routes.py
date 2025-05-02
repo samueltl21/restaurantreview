@@ -28,7 +28,7 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password, password):
+        if user and check_password_hash(user.password_hash, password):
             session['user_id'] = user.id
             session['user_name'] = user.name
             flash('Login successful!', 'success')
@@ -63,7 +63,7 @@ def sign_up():
         
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         #create new user
-        new_user = User(name=name, email=email, password=hashed_password)
+        new_user = User(name=name, email=email, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
