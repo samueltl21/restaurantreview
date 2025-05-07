@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics | RestaurantReview{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Top 3 Most Visited Restaurants</h2>
+    <canvas id="reviewChart" height="100"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('reviewChart').getContext('2d');
+  const reviewChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels | tojson }},
+      datasets: [{
+        label: 'Number of Reviews',
+        data: {{ values | tojson }},
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Reviews per Top Restaurant'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
