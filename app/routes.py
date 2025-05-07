@@ -14,7 +14,17 @@ def about_us():
 
 @application.route('/profile')
 def profile():
-    return render_template('profile.html')
+    if 'user_id' not in session:
+        flash('Please log in to view your profile.', 'warning')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    if not user:
+        session.clear()
+        flash('User not found. Please log in again.', 'danger')
+        return redirect(url_for('login'))
+    
+    return render_template('profile.html', user=user)
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():

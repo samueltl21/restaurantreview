@@ -41,6 +41,36 @@ endblock %} {% block content %}
         </div>
 
         <div class="mb-3">
+          <label for="location" class="form-label">Location:</label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            class="form-control"
+            placeholder="e.g., 123 Main St, City"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="cuisine" class="form-label">Cuisine Type:</label>
+          <select id="cuisine" name="cuisine" class="form-select" required>
+            <option value="">Choose...</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Italian">Italian</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Indian">Indian</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Thai">Thai</option>
+            <option value="American">American</option>
+            <option value="Mediterranean">Mediterranean</option>
+            <option value="Korean">Korean</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label for="date" class="form-label">Date of Visit:</label>
           <input
             type="date"
