@@ -102,3 +102,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const chartCanvas = document.getElementById('reviewChart');
+    if (chartCanvas && typeof chartLabels !== "undefined" && typeof chartValues !== "undefined") {
+        const ctx = chartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Number of Reviews',
+                    data: chartValues,
+                    borderWidth: 1,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    barThickness: 30 // 👈 This makes bars thinner
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Reviews per Top Restaurant'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1 // 👈 Show every integer
+                        }
+                    }
+                }
+            }
+        });
+
+        chartCanvas.style.backgroundColor = 'white';
+    }
+});
