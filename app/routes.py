@@ -85,6 +85,12 @@ def restaurants():
 
     return render_template("restaurants.html", grouped_restaurants=grouped)
 
+@application.route("/restaurant/<int:restaurant_id>")
+def restaurant_detail(restaurant_id):
+    from app.models import Restaurant
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    return render_template("restaurant_detail.html", restaurant=restaurant)
+
 
 @application.route('/logout')
 def logout():
