@@ -105,7 +105,8 @@ def restaurant_detail(restaurant_id):
             return redirect(url_for("login"))
 
         rating = int(request.form["rating"])
-        comment = request.form.get("comment", "")
+        date = request.form["date"]
+        spend = float(request.form["spend"])
         user_id = session["user_id"]
 
         # Optional: prevent multiple reviews by the same user
@@ -114,7 +115,7 @@ def restaurant_detail(restaurant_id):
             flash("You've already submitted a review for this restaurant.", "warning")
             return redirect(url_for("restaurant_detail", restaurant_id=restaurant_id))
 
-        review = Review(rating=rating, comment=comment, user_id=user_id, restaurant_id=restaurant_id)
+        review = Review(rating=rating, date=date, spend=spend, user_id=user_id, restaurant_id=restaurant_id)
         db.session.add(review)
         db.session.commit()
         flash("Thanks for your review!", "success")
@@ -125,33 +126,72 @@ def restaurant_detail(restaurant_id):
 @application.route("/upload_reviews", methods=["GET", "POST"])
 def upload_reviews():
     if request.method == "POST":
-        file = request.files["csv_file"]
-        if not file.filename.endswith(".csv"):
-            flash("Only CSV files are allowed.", "danger")
-            return redirect(request.url)
+        # Check if this is a CSV upload
+        if "csv_file" in request.files:
+            file = request.files["csv_file"]
+            if not file.filename.endswith(".csv"):
+                flash("Only CSV files are allowed.", "danger")
+                return redirect(request.url)
 
-        import csv
-        import io
+            import csv
+            import io
 
-        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
-        reader = csv.DictReader(stream)
+            stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+            reader = csv.DictReader(stream)
 
-        for row in reader:
-            try:
-                user_id = int(row["user_id"])
-                restaurant_id = int(row["restaurant_id"])
-                rating = int(row["rating"])
-                comment = row.get("comment", "")
-                
-                review = Review(user_id=user_id, restaurant_id=restaurant_id, rating=rating, comment=comment)
-                db.session.add(review)
-            except Exception as e:
-                flash(f"Error adding review: {e}", "warning")
-                continue
+            for row in reader:
+                try:
+                    user_id = int(row["user_id"])
+                    restaurant_id = int(row["restaurant_id"])
+                    rating = int(row["rating"])
+                    date = row["date"]
+                    spend = float(row["spend"])
+                    
+                    review = Review(user_id=user_id, restaurant_id=restaurant_id, rating=rating, date=date, spend=spend)
+                    db.session.add(review)
+                except Exception as e:
+                    flash(f"Error adding review: {e}", "warning")
+                    continue
 
-        db.session.commit()
-        flash("CSV uploaded successfully!", "success")
-        return redirect(url_for("index"))
+            db.session.commit()
+            flash("CSV uploaded successfully!", "success")
+            return redirect(url_for("index"))
+        
+        # Handle manual rating submission
+        elif "restaurant" in request.form:
+            if "user_id" not in session:
+                flash("You must be logged in to leave a review.", "danger")
+                return redirect(url_for("login"))
+
+            restaurant_name = request.form["restaurant"]
+            rating = int(request.form["rating"])
+            date = request.form["date"]
+            spend = float(request.form["spend"])
+            user_id = session["user_id"]
+
+            # Check if restaurant exists, if not create it
+            restaurant = Restaurant.query.filter_by(name=restaurant_name).first()
+            if not restaurant:
+                restaurant = Restaurant(
+                    name=restaurant_name,
+                    location="Unknown",  # You might want to add a location field to the form
+                    cuisine="Other",     # You might want to add a cuisine field to the form
+                    added_by=user_id
+                )
+                db.session.add(restaurant)
+                db.session.flush()  # Get the restaurant ID without committing
+
+            # Check for existing review
+            existing_review = Review.query.filter_by(user_id=user_id, restaurant_id=restaurant.id).first()
+            if existing_review:
+                flash("You've already submitted a review for this restaurant.", "warning")
+                return redirect(url_for("upload_reviews"))
+
+            review = Review(rating=rating, date=date, spend=spend, user_id=user_id, restaurant_id=restaurant.id)
+            db.session.add(review)
+            db.session.commit()
+            flash("Thanks for your review!", "success")
+            return redirect(url_for("restaurants"))
 
     return render_template("upload_reviews.html")
 
