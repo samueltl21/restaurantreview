@@ -25,10 +25,6 @@
                 {% if 'user_id' in session %}
                     <li class="nav-item">
                         <a class="nav-link disabled">Hello, {{ session['user_name'] }}!</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/restaurants">Restaurants</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('upload_reviews') }}">Upload</a>
                     </li>
