@@ -21,3 +21,14 @@ class Restaurant(db.Model):
 
     def __repr__(self):
         return f"<Restaurant {self.name}>"
+
+class Review(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    rating: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
+    comment: so.Mapped[Optional[str]] = so.mapped_column(sa.String(500), nullable=True)
+
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
+    restaurant_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('restaurant.id'), nullable=False)
+
+    def __repr__(self):
+        return f"<Review {self.id}>"
