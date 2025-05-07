@@ -3,9 +3,18 @@
 {% block title %}Restaurants - RestaurantReview{% endblock %}
 
 {% block content %}
-<!-- Banner -->
-<div class="restaurant-banner-custom">
-    Discover Top Rated Restaurants
+<!-- Hero Banner with Login/Signup -->
+<div class="position-relative">
+    <img src="{{ url_for('static', filename='images/home-food.jpg') }}" class="img-fluid banner-blur" alt="Food Banner">
+
+    <div class="home-title text-center text-white position-absolute top-50 start-50 translate-middle">
+        <h1 class="display-4">Discover Best Restaurants in Perth</h1>
+        <p class="lead">Taste it. Rate it. Share it.</p>
+        {% if 'user_id' not in session %}
+            <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
+            <a href="{{ url_for('sign_up') }}" class="btn btn-register">Sign Up</a>
+        {% endif %}
+    </div>
 </div>
 
 <!-- Section Start -->
@@ -49,14 +58,12 @@
     <h5 class="restaurant-category">{{ cuisine }} Cuisine</h5>
     <div class="restaurant-columns-custom">
         {% for r, rating in restaurants %}
-        <a href="{{ url_for('restaurant_detail', restaurant_id=r.id) }}">
             <div class="restaurant-item-custom">
                 {{ r.name }}<br>
                 <span class="stars">
                     {{ "⭐" * rating|int }} {% if rating > 0 %}({{ rating }}){% endif %}
                 </span>
             </div>
-        </a>
         {% endfor %}
     </div>
     {% endfor %}
