@@ -179,119 +179,37 @@ endblock %} {% block content %}
             <tr>
               <th>Date</th>
               <th>Restaurant</th>
-              <th>Address</th>
-              <th>Category</th>
+              <th>Location</th>
+              <th>Cuisine</th>
               <th>Rating</th>
               <th>Spend</th>
-              <th>Recommend Dishes</th>
             </tr>
           </thead>
           <tbody>
+            {% for review in user.reviews %}
             <tr class="table-row-animate">
-              <td>2025-04-01</td>
-              <td class="fw-bold">Tokyo Sushi Bar</td>
-              <td>123 Main St, City A</td>
+              <td>{{ review.date }}</td>
+              <td class="fw-bold">{{ review.restaurant.name }}</td>
+              <td>{{ review.restaurant.location }}</td>
               <td>
-                <span class="badge rounded-pill cuisine-badge japanese"
-                  >Japanese</span
+                <span
+                  class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}"
                 >
+                  {{ review.restaurant.cuisine }}
+                </span>
               </td>
               <td>
                 <div class="star-rating">
+                  {% for i in range(review.rating) %}
                   <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star half-filled">★</span>
-                </div>
-              </td>
-              <td>$35</td>
-              <td>Salmon Nigiri, Miso Soup</td>
-            </tr>
-            <tr class="table-row-animate">
-              <td>2025-04-08</td>
-              <td class="fw-bold">Bella Pasta</td>
-              <td>88 River Rd, City B</td>
-              <td>
-                <span class="badge rounded-pill cuisine-badge italian"
-                  >Italian</span
-                >
-              </td>
-              <td>
-                <div class="star-rating">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                </div>
-              </td>
-              <td>$45</td>
-              <td>Carbonara, Tiramisu</td>
-            </tr>
-            <tr class="table-row-animate">
-              <td>2025-04-12</td>
-              <td class="fw-bold">The Curry Spot</td>
-              <td>77 Spice Ave, City C</td>
-              <td>
-                <span class="badge rounded-pill cuisine-badge indian"
-                  >Indian</span
-                >
-              </td>
-              <td>
-                <div class="star-rating">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
+                  {% endfor %} {% for i in range(5 - review.rating) %}
                   <span class="star">★</span>
+                  {% endfor %}
                 </div>
               </td>
-              <td>$28</td>
-              <td>Butter Chicken, Garlic Naan</td>
+              <td>${{ "%.2f"|format(review.spend) }}</td>
             </tr>
-            <tr class="table-row-animate">
-              <td>2025-04-15</td>
-              <td class="fw-bold">Green Vegan</td>
-              <td>42 Plant Ln, City D</td>
-              <td>
-                <span class="badge rounded-pill cuisine-badge vegan"
-                  >Vegan</span
-                >
-              </td>
-              <td>
-                <div class="star-rating">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star">★</span>
-                </div>
-              </td>
-              <td>$22</td>
-              <td>Quinoa Bowl, Avocado Toast</td>
-            </tr>
-            <tr class="table-row-animate">
-              <td>2025-04-20</td>
-              <td class="fw-bold">Burger Town</td>
-              <td>12 Grill St, City E</td>
-              <td>
-                <span class="badge rounded-pill cuisine-badge american"
-                  >American</span
-                >
-              </td>
-              <td>
-                <div class="star-rating">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star half-filled">★</span>
-                </div>
-              </td>
-              <td>$30</td>
-              <td>Double Cheeseburger, Fries</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
