@@ -102,57 +102,6 @@ def sign_up():
 
     return render_template('sign_up.html')
 
-@application.route("/restaurants")
-def restaurants():
-    from collections import defaultdict
-    from sqlalchemy import func
-    from app.models import Restaurant, Review
-
-    # Query restaurants with their average rating
-    restaurants = (
-        db.session.query(Restaurant, func.avg(Review.rating).label("avg_rating"))
-        .outerjoin(Review, Review.restaurant_id == Restaurant.id)
-        .group_by(Restaurant.id)
-        .all()
-    )
-
-    # Group by cuisine with average rating included
-    grouped = defaultdict(list)
-    for restaurant, avg_rating in restaurants:
-        grouped[restaurant.cuisine].append((restaurant, round(avg_rating or 0, 1)))
-
-    return render_template("restaurants.html", grouped_restaurants=grouped)
-
-@application.route("/restaurant/<int:restaurant_id>", methods=["GET", "POST"])
-def restaurant_detail(restaurant_id):
-    from app.models import Restaurant, Review
-
-    restaurant = Restaurant.query.get_or_404(restaurant_id)
-
-    if request.method == "POST":
-        if "user_id" not in session:
-            flash("You must be logged in to leave a review.", "danger")
-            return redirect(url_for("login"))
-
-        rating = int(request.form["rating"])
-        date = request.form["date"]
-        spend = float(request.form["spend"])
-        user_id = session["user_id"]
-
-        # Optional: prevent multiple reviews by the same user
-        existing_review = Review.query.filter_by(user_id=user_id, restaurant_id=restaurant_id).first()
-        if existing_review:
-            flash("You've already submitted a review for this restaurant.", "warning")
-            return redirect(url_for("restaurant_detail", restaurant_id=restaurant_id))
-
-        review = Review(rating=rating, date=date, spend=spend, user_id=user_id, restaurant_id=restaurant_id)
-        db.session.add(review)
-        db.session.commit()
-        flash("Thanks for your review!", "success")
-        return redirect(url_for("restaurant_detail", restaurant_id=restaurant_id))
-
-    return render_template("restaurant_detail.html", restaurant=restaurant)
-
 @application.route("/upload_reviews", methods=["GET", "POST"])
 def upload_reviews():
     if request.method == "POST":
