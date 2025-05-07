@@ -6,7 +6,23 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 @application.route('/')
 def index():
-    return render_template('home.html')
+    from collections import defaultdict
+    from sqlalchemy import func
+
+    # Get all restaurants and their average ratings
+    restaurants = (
+        db.session.query(Restaurant, func.avg(Review.rating).label("avg_rating"))
+        .outerjoin(Review, Review.restaurant_id == Restaurant.id)
+        .group_by(Restaurant.id)
+        .all()
+    )
+
+    # Group them by cuisine
+    grouped = defaultdict(list)
+    for restaurant, avg_rating in restaurants:
+        grouped[restaurant.cuisine].append((restaurant, round(avg_rating or 0, 1)))
+
+    return render_template("restaurants.html", grouped_restaurants=grouped)
 
 @application.route('/about_us')
 def about_us():
