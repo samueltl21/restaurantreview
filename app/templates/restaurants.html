@@ -10,7 +10,7 @@
     }
 
     .restaurant-banner {
-        background-image: url('{{ url_for('static', filename='images/home-food.jpg') }}');
+        background-image: url('{{ url_for('static', filename=' images/home-food.jpg') }}');
         background-size: cover;
         background-position: center;
         height: 300px;
@@ -217,10 +217,12 @@
     <h5>{{ cuisine }} Cuisine</h5>
     <div class="restaurant-columns">
         {% for r in restaurants %}
+        <a href="{{ url_for('restaurant_detail', restaurant_id=r.id) }}">
             <div class="restaurant-item">
                 {{ r.name }}<br>
-                <span class="stars">⭐⭐⭐⭐</span> {# Replace with real ratings later #}
+                <span class="stars">⭐⭐⭐⭐</span>
             </div>
+        </a>
         {% endfor %}
     </div>
     {% endfor %}
@@ -236,8 +238,10 @@
         <div class="restaurant-item">Mama’s Kitchen<br><span class="stars">⭐⭐⭐⭐</span></div>
         <div class="restaurant-item">Shawarma Stop<br><span class="stars">⭐⭐⭐</span></div>
         <div class="restaurant-item">Kebab Kingdom<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item extra-arabian" style="display:none;">Falafel House<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item extra-arabian" style="display:none;">The Mezze Spot<br><span class="stars">⭐⭐⭐⭐</span></div>
+        <div class="restaurant-item extra-arabian" style="display:none;">Falafel House<br><span class="stars">⭐⭐⭐</span>
+        </div>
+        <div class="restaurant-item extra-arabian" style="display:none;">The Mezze Spot<br><span
+                class="stars">⭐⭐⭐⭐</span></div>
     </div>
     <div style="text-align:center;">
         <button onclick="toggle('arabian')" class="btn" id="btn-arabian">Load More</button>
@@ -251,8 +255,10 @@
         <div class="restaurant-item">Le Petit Café<br><span class="stars">⭐⭐⭐</span></div>
         <div class="restaurant-item">Burger Theory<br><span class="stars">⭐⭐⭐</span></div>
         <div class="restaurant-item">Farm to Fork<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item extra-italian" style="display:none;">Bella Roma<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item extra-italian" style="display:none;">Olive & Basil<br><span class="stars">⭐⭐⭐</span></div>
+        <div class="restaurant-item extra-italian" style="display:none;">Bella Roma<br><span class="stars">⭐⭐⭐⭐</span>
+        </div>
+        <div class="restaurant-item extra-italian" style="display:none;">Olive & Basil<br><span class="stars">⭐⭐⭐</span>
+        </div>
     </div>
     <div style="text-align:center;">
         <button onclick="toggle('italian')" class="btn" id="btn-italian">Load More</button>
