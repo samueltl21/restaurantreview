@@ -2,9 +2,43 @@
 {% block title %}{{ restaurant.name }} - Restaurant Details{% endblock %}
 
 {% block content %}
+
 <h1>{{ restaurant.name }}</h1>
+<p><strong>Average Rating:</strong> 
+    {% if restaurant.reviews %}
+        {{ "%.1f"|format(restaurant.reviews | map(attribute='rating') | sum / restaurant.reviews | length) }}
+    {% else %}
+        No ratings yet
+    {% endif %}
+</p>
 <p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
 <p><strong>Location:</strong> {{ restaurant.location }}</p>
 <p><strong>Added by User ID:</strong> {{ restaurant.added_by }}</p>
-<!-- Add review section or map later -->
+
+<hr>
+<h2>Leave a Review</h2>
+<form method="POST" action="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}">
+    <label for="rating">Rating (1–5):</label>
+    <select name="rating" required>
+        <option value="">--Select--</option>
+        {% for i in range(1, 6) %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="comment">Comment:</label><br>
+    <textarea name="comment" rows="4" cols="50"></textarea><br><br>
+
+    <button type="submit">Submit Review</button>
+</form>
+
+<hr>
+<h2>Reviews</h2>
+{% for review in restaurant.reviews %}
+    <p><strong>Rating:</strong> {{ review.rating }}<br>
+    <strong>Comment:</strong> {{ review.comment }}</p>
+    <hr>
+{% else %}
+    <p>No reviews yet.</p>
+{% endfor %}
 {% endblock %}
