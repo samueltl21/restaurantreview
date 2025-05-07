@@ -574,3 +574,214 @@ h1 {
       font-size: 0.85rem;
     }
   }
+
+/* === Custom Styles for Restaurant Page === */
+
+/* ==== GENERAL ==== */
+
+html, body {
+  height: 100%;
+}
+
+body.restaurant-page {
+  font-family: 'Segoe UI', sans-serif;
+  background: url('/static/images/home-food.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100%;
+  position: relative;
+}
+
+/* Add a faded + blurry overlay */
+body.restaurant-page::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.75);  /* Light fade */
+  backdrop-filter: blur(8px) brightness(0.9);
+  z-index: -1;
+}
+
+
+/* ==== MAIN CONTAINER WITH BACKGROUND ==== */
+
+.section-wrapper-custom {
+  max-width: 1200px;
+  margin: -80px auto 40px auto;
+  padding: 50px 30px;
+  background: #ffffff;  /* Clean white card */
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  position: relative;
+}
+
+
+/* ==== BANNER ==== */
+
+.restaurant-banner-custom {
+  background-image: url('../images/home-food.jpg');  /* This is optional now */
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+  font-size: 2.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* ==== TOP TRENDING ==== */
+
+.top-section-custom {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.top-card-custom {
+  text-align: center;
+  background: #fefefe;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 200px;
+}
+
+.top-card-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.top-card-custom img {
+  width: 100%;
+  height: 130px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f7f9fc;
+  padding: 6px;
+}
+
+.top-card-custom .caption {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 6px;
+}
+
+/* ==== RESTAURANT LISTS ==== */
+
+.restaurant-columns-custom {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.restaurant-item-custom {
+  background: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+.restaurant-item-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.restaurant-item-custom .stars {
+  color: #ffc107;
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+/* ==== HEADINGS ==== */
+
+h2.restaurant-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: #222;
+}
+
+h4.restaurant-subtitle {
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: #555;
+}
+
+h5.restaurant-category {
+  margin-top: 3rem;
+  margin-bottom: 1.4rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #444;
+  text-align: center;
+  position: relative;
+}
+
+/* ==== LOAD MORE BUTTON ==== */
+
+.btn-restaurant {
+  background-color: #fff;
+  border: 1px solid #007bff;
+  color: #007bff;
+  padding: 5px 15px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-restaurant:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* ==== ANIMATIONS ==== */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* ==== RESPONSIVE ==== */
+
+@media (max-width: 600px) {
+  .restaurant-banner-custom {
+      font-size: 1.8rem;
+      text-align: center;
+      padding: 0 20px;
+  }
+
+  .top-card-custom {
+      width: 90%;
+  }
+}
+
+.section-wrapper-custom {
+  max-width: 1400px; /* make your content area wider too */
+}
