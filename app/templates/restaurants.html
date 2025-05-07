@@ -213,16 +213,17 @@
     <h4>🍴 Explore More Restaurants by Category</h4>
 
     <!-- Asian -->
-    <h5>🥢 Asian Cuisine</h5>
-    <div class="restaurant-columns" id="asian-list">
-        <div class="restaurant-item">Wok This Way<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item">Sushi Symphony<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item">Ramen Realm<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item">Tandoori Tales<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item">Bamboo Garden<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item extra-asian" style="display:none;">Dragon’s Bowl<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item extra-asian" style="display:none;">Curry Leaf Express<br><span class="stars">⭐⭐⭐⭐</span></div>
+    {% for cuisine, restaurants in grouped_restaurants.items() %}
+    <h5>{{ cuisine }} Cuisine</h5>
+    <div class="restaurant-columns">
+        {% for r in restaurants %}
+            <div class="restaurant-item">
+                {{ r.name }}<br>
+                <span class="stars">⭐⭐⭐⭐</span> {# Replace with real ratings later #}
+            </div>
+        {% endfor %}
     </div>
+    {% endfor %}
     <div style="text-align:center;">
         <button onclick="toggle('asian')" class="btn" id="btn-asian">Load More</button>
     </div>
