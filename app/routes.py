@@ -174,7 +174,7 @@ def upload_reviews():
             db.session.add(review)
             db.session.commit()
             flash("Thanks for your review!", "success")
-            return redirect(url_for("restaurants"))
+            return redirect(url_for("index"))
 
     return render_template("upload_reviews.html")
 
