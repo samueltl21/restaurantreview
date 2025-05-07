@@ -72,9 +72,19 @@ def sign_up():
 
     return render_template('sign_up.html')
 
-@application.route('/restaurants')
+@application.route("/restaurants")
 def restaurants():
-    return render_template('restaurants.html')
+    from collections import defaultdict
+    from app.models import Restaurant
+
+    restaurants = Restaurant.query.all()
+    grouped = defaultdict(list)
+
+    for r in restaurants:
+        grouped[r.cuisine].append(r)
+
+    return render_template("restaurants.html", grouped_restaurants=grouped)
+
 
 @application.route('/logout')
 def logout():
