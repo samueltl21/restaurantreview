@@ -194,14 +194,18 @@ def upload_reviews():
             date = request.form["date"]
             spend = float(request.form["spend"])
             user_id = session["user_id"]
+            
+            # Get location and cuisine from the form
+            location = request.form["location"]
+            cuisine = request.form["cuisine"]
 
             # Check if restaurant exists, if not create it
             restaurant = Restaurant.query.filter_by(name=restaurant_name).first()
             if not restaurant:
                 restaurant = Restaurant(
                     name=restaurant_name,
-                    location="Unknown",  # You might want to add a location field to the form
-                    cuisine="Other",     # You might want to add a cuisine field to the form
+                    location=location,  # Use location from the form
+                    cuisine=cuisine,    # Use cuisine from the form
                     added_by=user_id
                 )
                 db.session.add(restaurant)
