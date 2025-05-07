@@ -17,12 +17,16 @@ def index():
         .all()
     )
 
+    # Top 3 restaurants by average rating
+    sorted_by_rating = sorted(restaurants, key=lambda x: x[1] or 0, reverse=True)
+    top_restaurants = sorted_by_rating[:3]
+
     # Group them by cuisine
     grouped = defaultdict(list)
     for restaurant, avg_rating in restaurants:
         grouped[restaurant.cuisine].append((restaurant, round(avg_rating or 0, 1)))
 
-    return render_template("restaurants.html", grouped_restaurants=grouped)
+    return render_template("restaurants.html", grouped_restaurants=grouped, top_restaurants=top_restaurants)
 
 @application.route('/about_us')
 def about_us():

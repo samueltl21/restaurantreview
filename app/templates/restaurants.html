@@ -11,8 +11,8 @@
         <h1 class="display-4">Discover Best Restaurants in Perth</h1>
         <p class="lead">Taste it. Rate it. Share it.</p>
         {% if 'user_id' not in session %}
-            <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
-            <a href="{{ url_for('sign_up') }}" class="btn btn-register">Sign Up</a>
+        <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
+        <a href="{{ url_for('sign_up') }}" class="btn btn-register">Sign Up</a>
         {% endif %}
     </div>
 </div>
@@ -23,32 +23,15 @@
     <!-- Top Trending -->
     <h2 class="restaurant-title">🌟 Trending Right Now</h2>
     <div class="top-section-custom">
+        {% for restaurant, avg_rating in top_restaurants %}
         <div class="top-card-custom">
-            <img src="{{ url_for('static', filename='images/golden_spoon.jpg') }}" alt="Golden Spoon">
-            <p class="mt-2 mb-0"><strong>Golden Spoon</strong></p>
-            <p class="caption">"Where elegance meets flavor."</p>
+            <img src="{{ url_for('static', filename='images/image.jpg') }}" alt="{{ restaurant.name }}">
+            <p class="mt-2 mb-0"><strong>{{ restaurant.name }}</strong></p>
+            <p class="caption">{{ avg_rating }} ⭐ average</p>
         </div>
-        <div class="top-card-custom">
-            <img src="{{ url_for('static', filename='images/Ocean_Delight.png') }}" alt="Ocean Delight">
-            <p class="mt-2 mb-0"><strong>Ocean Delight</strong></p>
-            <p class="caption">"Seafood you can trust."</p>
-        </div>
-        <div class="top-card-custom">
-            <img src="{{ url_for('static', filename='images/Flavor_Town.png') }}" alt="FlavorTown">
-            <p class="mt-2 mb-0"><strong>FlavorTown</strong></p>
-            <p class="caption">"Bold bites. Spicy nights."</p>
-        </div>
-        <div class="top-card-custom">
-            <img src="{{ url_for('static', filename='images/The_Spice_House.jpg') }}" alt="The Spice House">
-            <p class="mt-2 mb-0"><strong>The Spice House</strong></p>
-            <p class="caption">"Simply subtle, magically spicy."</p>
-        </div>
-        <div class="top-card-custom">
-            <img src="{{ url_for('static', filename='images/Midnight_Bites.jpg') }}" alt="Midnight Bites">
-            <p class="mt-2 mb-0"><strong>Midnight Bites</strong></p>
-            <p class="caption">"Late night, done right."</p>
-        </div>
+        {% endfor %}
     </div>
+
 
     <!-- Categorized Restaurant Lists -->
     <h4 class="restaurant-subtitle">🍴 Explore More Restaurants by Category</h4>
@@ -58,48 +41,14 @@
     <h5 class="restaurant-category">{{ cuisine }} Cuisine</h5>
     <div class="restaurant-columns-custom">
         {% for r, rating in restaurants %}
-            <div class="restaurant-item-custom">
-                {{ r.name }}<br>
-                <span class="stars">
-                    {{ "⭐" * rating|int }} {% if rating > 0 %}({{ rating }}){% endif %}
-                </span>
-            </div>
+        <div class="restaurant-item-custom">
+            {{ r.name }}<br>
+            <span class="stars">
+                {{ "⭐" * rating|int }} {% if rating > 0 %}({{ rating }}){% endif %}
+            </span>
+        </div>
         {% endfor %}
     </div>
     {% endfor %}
-    <div style="text-align:center;">
-        <button onclick="toggle('asian')" class="btn-restaurant" id="btn-asian">Load More</button>
-    </div>
-
-    <!-- Arabian -->
-    <h5 class="restaurant-category">🍢 Arabian Delights</h5>
-    <div class="restaurant-columns-custom" id="arabian-list">
-        <div class="restaurant-item-custom">Midnight Bites<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">The Spice House<br><span class="stars">⭐⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Mama’s Kitchen<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Shawarma Stop<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Kebab Kingdom<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom extra-arabian" style="display:none;">Falafel House<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom extra-arabian" style="display:none;">The Mezze Spot<br><span class="stars">⭐⭐⭐⭐</span></div>
-    </div>
-    <div style="text-align:center;">
-        <button onclick="toggle('arabian')" class="btn-restaurant" id="btn-arabian">Load More</button>
-    </div>
-
-    <!-- Italian -->
-    <h5 class="restaurant-category">🍝 Italian Cuisine</h5>
-    <div class="restaurant-columns-custom" id="italian-list">
-        <div class="restaurant-item-custom">Pasta Republic<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Sunset Grill<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Le Petit Café<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Burger Theory<br><span class="stars">⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom">Farm to Fork<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom extra-italian" style="display:none;">Bella Roma<br><span class="stars">⭐⭐⭐⭐</span></div>
-        <div class="restaurant-item-custom extra-italian" style="display:none;">Olive & Basil<br><span class="stars">⭐⭐⭐</span></div>
-    </div>
-    <div style="text-align:center;">
-        <button onclick="toggle('italian')" class="btn-restaurant" id="btn-italian">Load More</button>
-    </div>
-
 </div>
 {% endblock %}
