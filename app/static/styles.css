@@ -607,7 +607,7 @@ z-index: -1;
 
 .section-wrapper-custom {
 max-width: 1200px;
-margin: -80px auto 40px auto;
+margin: auto;
 padding: 50px 30px;
 background: #ffffff;  /* Clean white card */
 border-radius: 16px;
