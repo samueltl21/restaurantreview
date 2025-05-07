@@ -29,8 +29,9 @@ class Restaurant(db.Model):
 
 class Review(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    date: so.Mapped[str] = so.mapped_column(sa.String(10), nullable=False)  # Format: YYYY-MM-DD
     rating: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
-    comment: so.Mapped[Optional[str]] = so.mapped_column(sa.String(500), nullable=True)
+    spend: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
 
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
     restaurant_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('restaurant.id'), nullable=False)
