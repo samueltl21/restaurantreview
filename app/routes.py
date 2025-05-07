@@ -2,7 +2,7 @@ from app import application, db
 from flask import render_template, request, redirect, url_for, flash, session
 from app.models import User, Restaurant, Review
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from sqlalchemy import func
 
 @application.route('/')
 def index():
@@ -234,3 +234,19 @@ def logout():
     session.clear()  # Clear all session data
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
+
+@application.route("/analytics")
+def analytics():
+    top_restaurants = (
+        db.session.query(Restaurant.name, func.count(Review.id).label("review_count"))
+        .join(Review)
+        .group_by(Restaurant.id)
+        .order_by(func.count(Review.id).desc())
+        .limit(3)
+        .all()
+    )
+
+    labels = [r[0] for r in top_restaurants]
+    values = [r[1] for r in top_restaurants]
+
+    return render_template("analytics.html", labels=labels, values=values)
