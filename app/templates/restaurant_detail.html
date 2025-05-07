@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ restaurant.name }} - Restaurant Details{% endblock %}
+
+{% block content %}
+<h1>{{ restaurant.name }}</h1>
+<p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
+<p><strong>Location:</strong> {{ restaurant.location }}</p>
+<p><strong>Added by User ID:</strong> {{ restaurant.added_by }}</p>
+<!-- Add review section or map later -->
+{% endblock %}
