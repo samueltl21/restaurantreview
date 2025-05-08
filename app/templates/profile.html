@@ -174,10 +174,14 @@ endblock %} {% block content %}
       <i class="bi bi-journal-richtext me-2"></i> Your Restaurant Reviews
     </div>
     <div class="card-body">
+      <div class="text-center mb-3">
+        <button id="shareButton" class="btn btn-outline-primary">Share Selected Reviews</button>
+      </div>      
       <div class="table-responsive">
         <table class="table table-hover review-table" id="reviewTable">
           <thead>
             <tr>
+              <th>Share</th>
               <th>Date</th>
               <th>Restaurant</th>
               <th>Location</th>
@@ -189,6 +193,7 @@ endblock %} {% block content %}
           <tbody>
             {% for review in user.reviews %}
             <tr class="table-row-animate">
+              <td><input type="checkbox" class="share-checkbox" value="{{ review.id }}"></td>            
               <td>{{ review.date }}</td>
               <td class="fw-bold">{{ review.restaurant.name }}</td>
               <td>{{ review.restaurant.location }}</td>

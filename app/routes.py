@@ -1,8 +1,9 @@
 from app import application, db
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash, session, jsonify
 from app.models import User, Restaurant, Review
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
+import uuid
 
 @application.route('/')
 def index():
@@ -233,3 +234,30 @@ def analytics():
     values = [r[1] for r in top_restaurants]
 
     return render_template("analytics.html", labels=labels, values=values)
+
+# Temp in-memory storage (use DB or Redis in production)
+shared_reviews_store = {}
+
+@application.route('/generate_share_link', methods=['POST'])
+def generate_share_link():
+    data = request.get_json()
+    review_ids = data.get('review_ids', [])
+
+    # Generate a unique token
+    token = str(uuid.uuid4())
+
+    # Optional: validate review_ids from DB
+    shared_reviews_store[token] = review_ids  # store for retrieval later
+
+    return jsonify({"token": token})
+
+@application.route('/shared/<token>')
+def view_shared_reviews(token):
+    review_ids = shared_reviews_store.get(token)
+    if not review_ids:
+        return "Invalid or expired link", 404
+
+    # Get the reviews
+    reviews = Review.query.filter(Review.id.in_(review_ids)).all()
+
+    return render_template("shared_reviews.html", reviews=reviews)
