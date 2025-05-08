@@ -143,3 +143,32 @@ document.addEventListener('DOMContentLoaded', function () {
         chartCanvas.style.backgroundColor = 'white';
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const shareBtn = document.getElementById("shareButton");
+    shareBtn.addEventListener("click", () => {
+      const selected = [];
+      document.querySelectorAll(".share-checkbox:checked").forEach((checkbox) => {
+        selected.push(checkbox.value);
+      });
+  
+      if (selected.length === 0) {
+        alert("Please select at least one review to share.");
+        return;
+      }
+  
+      // Send selected review IDs to backend to generate share link
+      fetch("/generate_share_link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ review_ids: selected })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const shareLink = window.location.origin + "/shared/" + data.token;
+        navigator.clipboard.writeText(shareLink); // Copy to clipboard
+        alert("Share link copied to clipboard:\n" + shareLink);
+      });
+    });
+  });
+  
