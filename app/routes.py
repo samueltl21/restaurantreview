@@ -4,6 +4,7 @@ from app.models import User, Restaurant, Review
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
 from app.forms import LoginForm, SignUpForm
+from flask_login import login_user, logout_user, current_user, login_required
 import uuid
 
 @application.route('/')
@@ -35,18 +36,9 @@ def about_us():
     return render_template('about_us.html')
 
 @application.route('/profile')
+@login_required
 def profile():
-    if 'user_id' not in session:
-        flash('Please log in to view your profile.', 'warning')
-        return redirect(url_for('login'))
-    
-    user = User.query.get(session['user_id'])
-    if not user:
-        session.clear()
-        flash('User not found. Please log in again.', 'danger')
-        return redirect(url_for('login'))
-    
-    return render_template('profile.html', user=user)
+    return render_template('profile.html', user=current_user)
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
@@ -57,8 +49,7 @@ def login():
 
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password_hash, password):
-            session['user_id'] = user.id
-            session['user_name'] = user.name
+            login_user(user)
             flash('Login successful!', 'success')
             return redirect(url_for('index'))
         else:
@@ -84,6 +75,7 @@ def sign_up():
         db.session.add(new_user)
         db.session.commit()
 
+        login_user(new_user)
         flash('Sign up successful! Please log in', 'success')
         return redirect(url_for('login'))
 
@@ -200,8 +192,9 @@ def upload_reviews():
     return render_template("upload_reviews.html")
 
 @application.route('/logout')
+@login_required
 def logout():
-    session.clear()  # Clear all session data
+    logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
 
