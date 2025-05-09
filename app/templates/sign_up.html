@@ -1,31 +1,36 @@
 {% extends "base.html" %}
- 
+
 {% block title %}Sign Up - RestaurantReview{% endblock %}
- 
+
 {% block content %}
-<form id="signup-form" class="auth-form" method="POST" action="{{ url_for('sign_up') }}">
+<form method="POST" class="auth-form">
+    {{ form.hidden_tag() }}
     <h1>Create Your Account</h1>
-    <div class="input-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        {{ form.name(class_="form-control", id="name", placeholder="Enter your full name") }}
     </div>
-    <div class="input-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required oninvalid="this.setCustomValidity('Invalid email address')" oninput="this.setCustomValidity('')">    
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        {{ form.email(class_="form-control", id="email", placeholder="Enter your email") }}
     </div>
-    <div class="input-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Create a password" autocomplete="off" required>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        {{ form.password(class_="form-control", id="password", placeholder="Create a password", autocomplete="off") }}
     </div>
-    <div class="input-group">
-        <label for="confirm-password">Confirm Password</label>
-        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" autocomplete="off" required>
+
+    <div class="mb-3">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        {{ form.confirm_password(class_="form-control", id="confirm_password", placeholder="Confirm your password", autocomplete="off") }}
     </div>
-    
-    
-    <div class ="center-container">
-        <button type="submit" class="btn btn-register">Sign Up</button>
+
+    <div class="center-container">
+        {{ form.submit(class_="btn btn-register") }}
     </div>
+
     <div class="form-link">
         Already have an account? <a href="{{ url_for('login') }}">Login</a>
     </div>
