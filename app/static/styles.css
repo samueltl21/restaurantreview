@@ -786,3 +786,18 @@ to {
 max-width: 1400px; /* make your content area wider too */
 }
 
+.flash-container {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  width: 100%;
+  max-width: 500px;
+  padding: 0 1rem;
+  pointer-events: none; /* lets user interact with page behind it */
+}
+
+.flash-container .alert {
+  pointer-events: auto; /* re-enables close button */
+}
