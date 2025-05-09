@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, flash, session, j
 from app.models import User, Restaurant, Review
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
+from app.forms import LoginForm, SignUpForm
 import uuid
 
 @application.route('/')
@@ -49,16 +50,12 @@ def profile():
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        if not (email and password):
-            flash('All fields are required.', 'error')
-            return redirect(url_for('login'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
 
         user = User.query.filter_by(email=email).first()
-
         if user and check_password_hash(user.password_hash, password):
             session['user_id'] = user.id
             session['user_name'] = user.name
@@ -66,34 +63,23 @@ def login():
             return redirect(url_for('index'))
         else:
             flash('Invalid email or password!', 'danger')
-            return redirect(url_for('login'))
-        
-    return render_template('login.html')
+    return render_template('login.html', form=form)
 
 @application.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form['confirm-password']
+    form = SignUpForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+        confirm_password = form.confirm_password.data
 
-        if not (name and email and password and confirm_password):
-            flash('All fields are required.', 'error')
-            return redirect(url_for('sign_up'))
-        
-        if password != confirm_password:
-            flash('Passwords do not match!', 'danger')
-            return redirect(url_for('sign_up'))
-        
-        #check if user already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash('Email already registered!', 'danger')
             return redirect(url_for('sign_up'))
-        
+
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        #create new user
         new_user = User(name=name, email=email, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -101,7 +87,7 @@ def sign_up():
         flash('Sign up successful! Please log in', 'success')
         return redirect(url_for('login'))
 
-    return render_template('sign_up.html')
+    return render_template('sign_up.html', form=form)
 
 @application.route("/upload_reviews", methods=["GET", "POST"])
 def upload_reviews():
