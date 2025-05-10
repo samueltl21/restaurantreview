@@ -172,3 +172,95 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
   
+document.addEventListener('DOMContentLoaded', function() {
+  // Analytics page charts
+  // Check if we're on the analytics page by looking for required elements
+  if (document.getElementById('cuisineChart') && document.getElementById('spendChart')) {
+    // Create random colors for the pie chart
+    function generateColors(count) {
+      const colors = [];
+      for (let i = 0; i < count; i++) {
+        const r = Math.floor(Math.random() * 200);
+        const g = Math.floor(Math.random() * 200);
+        const b = Math.floor(Math.random() * 200);
+        colors.push(`rgba(${r}, ${g}, ${b}, 0.7)`);
+      }
+      return colors;
+    }
+
+    if (cuisineLabels && cuisineLabels.length > 0) {
+      // Cuisine Preference Pie Chart
+      const cuisineCtx = document.getElementById('cuisineChart').getContext('2d');
+      const pieColors = generateColors(cuisineLabels.length);
+      
+      new Chart(cuisineCtx, {
+        type: 'pie',
+        data: {
+          labels: cuisineLabels,
+          datasets: [{
+            data: cuisineValues,
+            backgroundColor: pieColors,
+            borderColor: pieColors.map(color => color.replace('0.7', '1')),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = Math.round((value / total) * 100);
+                  return `${label}: ${value} (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // Average Spend per Cuisine Bar Chart
+      const spendCtx = document.getElementById('spendChart').getContext('2d');
+      
+      new Chart(spendCtx, {
+        type: 'bar',
+        data: {
+          labels: spendLabels,
+          datasets: [{
+            label: 'Average Spend ($)',
+            data: spendValues,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '$' + value;
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          }
+        }
+      });
+    }
+  }
+});
+  
