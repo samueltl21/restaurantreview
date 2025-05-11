@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ restaurant.name }} - RestaurantReview{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2>{{ restaurant.name }}</h2>
+            <p><strong>Location:</strong> {{ restaurant.location }}</p>
+            <p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
+
+            {% if restaurant.image and restaurant.image|length > 0 %}
+            <img src="{{ url_for('static', filename='images/' ~ restaurant.image) }}" alt="{{ restaurant.name }}"
+                class="img-fluid mb-3" style="max-height: 300px;">
+            {% elif current_user.is_authenticated %}
+            <div id="upload-prompt" class="mb-3">
+                <p>This restaurant has no image yet. Would you like to upload one?</p>
+                <button class="btn btn-outline-primary" onclick="showUploadForm()">Yes, upload image</button>
+            </div>
+
+            <form method="POST" action="{{ url_for('upload_restaurant_image', restaurant_id=restaurant.id) }}"
+                enctype="multipart/form-data" id="upload-form" style="display: none;">
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload Image</label>
+                    <input class="form-control" type="file" name="image" id="image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+            {% endif %}
+
+            <hr>
+            <h4>Reviews</h4>
+            {% for review in reviews %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p><strong>Rating:</strong> {{ review.rating }} ⭐</p>
+                    <p><strong>Spend:</strong> ${{ review.spend }}</p>
+                    <p><strong>Date:</strong> {{ review.date }}</p>
+                    {% if review.comment %}
+                    <p><strong>Comment:</strong> {{ review.comment }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
