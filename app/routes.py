@@ -2,6 +2,7 @@ from app import application, db
 from flask import render_template, request, redirect, url_for, flash, session, jsonify
 from app.models import User, Restaurant, Review
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from sqlalchemy import func
 from app.forms import LoginForm, SignUpForm, ReviewForm
 from flask_login import login_user, logout_user, current_user, login_required
@@ -184,3 +185,34 @@ def search_restaurants():
 
     matches = Restaurant.query.filter(Restaurant.name.ilike(f"%{query}%")).limit(10).all()
     return jsonify([r.name for r in matches])
+
+@application.route('/restaurants/<int:restaurant_id>')
+def restaurant_detail(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    reviews = Review.query.filter_by(restaurant_id=restaurant_id).all()
+    return render_template('restaurant_detail.html', restaurant=restaurant, reviews=reviews)
+
+@application.route('/restaurants/<int:restaurant_id>/upload_image', methods=['POST'])
+@login_required
+def upload_restaurant_image(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+
+    if 'image' not in request.files:
+        flash('No image uploaded.', 'danger')
+        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+
+    file = request.files['image']
+    if file.filename == '':
+        flash('No selected file.', 'warning')
+        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+
+    if file:
+        filename = secure_filename(file.filename)
+        path = os.path.join('app/static/images', filename)
+        file.save(path)
+
+        restaurant.image = filename
+        db.session.commit()
+
+        flash('Image uploaded successfully!', 'success')
+        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
