@@ -96,6 +96,7 @@ def upload_reviews():
         spend = float(form.spend.data)
 
         # Check if restaurant exists
+
         restaurant = Restaurant.query.filter_by(name=restaurant_name).first()
         if not restaurant:
             restaurant = Restaurant(
