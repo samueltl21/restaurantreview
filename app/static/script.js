@@ -244,4 +244,8 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => $suggestions.empty(), 150);
     });
   });
-  
+
+  function showUploadForm() {
+    document.getElementById("upload-prompt").style.display = "none";
+    document.getElementById("upload-form").style.display = "block";
+  }

@@ -24,15 +24,19 @@
     <h2 class="restaurant-title">🌟 Trending Right Now</h2>
     <div class="top-section-custom">
         {% for restaurant, avg_rating in top_restaurants %}
-        <div class="top-card-custom">
-            {% if restaurant.image %}
+        <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}"
+            class="text-decoration-none text-dark">
+            <div class="top-card-custom">
+                {% if restaurant.image %}
                 <img src="{{ url_for('static', filename='images/' ~ restaurant.image) }}" alt="{{ restaurant.name }}">
-            {% endif %}
-            <p class="mt-2 mb-0"><strong>{{ restaurant.name }}</strong></p>
-            <p class="caption">{{ avg_rating }} ⭐ average</p>
-        </div>
+                {% endif %}
+                <p class="mt-2 mb-0"><strong>{{ restaurant.name }}</strong></p>
+                <p class="caption">{{ avg_rating }} ⭐ average</p>
+            </div>
+        </a>
         {% endfor %}
-    </div>    
+
+    </div>
 
     <!-- Categorized Restaurant Lists -->
     <h4 class="restaurant-subtitle">🍴 Explore More Restaurants by Category</h4>
@@ -42,12 +46,14 @@
     <h5 class="restaurant-category">{{ cuisine }} Cuisine</h5>
     <div class="restaurant-columns-custom">
         {% for r, rating in restaurants %}
-        <div class="restaurant-item-custom">
-            {{ r.name }}<br>
-            <span class="stars">
-                {{ "⭐" * rating|int }} {% if rating > 0 %}({{ rating }}){% endif %}
-            </span>
-        </div>
+        <a href="{{ url_for('restaurant_detail', restaurant_id=r.id) }}" class="text-decoration-none text-dark">
+            <div class="restaurant-item-custom">
+                {{ r.name }}<br>
+                <span class="stars">
+                    {{ "⭐" * rating|int }} {% if rating > 0 %}({{ rating }}){% endif %}
+                </span>
+            </div>
+          </a>          
         {% endfor %}
     </div>
     {% endfor %}

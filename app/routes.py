@@ -2,6 +2,7 @@ from app import application, db
 from flask import render_template, request, redirect, url_for, flash, session, jsonify
 from app.models import User, Restaurant, Review
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from sqlalchemy import func
 from app.forms import LoginForm, SignUpForm, ReviewForm
 from flask_login import login_user, logout_user, current_user, login_required
@@ -158,30 +159,6 @@ def analytics():
 # Temp in-memory storage (use DB or Redis in production)
 shared_reviews_store = {}
 
-@application.route('/generate_share_link', methods=['POST'])
-def generate_share_link():
-    data = request.get_json()
-    review_ids = data.get('review_ids', [])
-
-    # Generate a unique token
-    token = str(uuid.uuid4())
-
-    # Optional: validate review_ids from DB
-    shared_reviews_store[token] = review_ids  # store for retrieval later
-
-    return jsonify({"token": token})
-
-@application.route('/shared/<token>')
-def view_shared_reviews(token):
-    review_ids = shared_reviews_store.get(token)
-    if not review_ids:
-        return "Invalid or expired link", 404
-
-    # Get the reviews
-    reviews = Review.query.filter(Review.id.in_(review_ids)).all()
-
-    return render_template("shared_reviews.html", reviews=reviews)
-
 @application.route('/check_restaurant', methods=['POST'])
 def check_restaurant():
     name = request.form.get('restaurant_name', '').strip()
@@ -208,3 +185,34 @@ def search_restaurants():
 
     matches = Restaurant.query.filter(Restaurant.name.ilike(f"%{query}%")).limit(10).all()
     return jsonify([r.name for r in matches])
+
+@application.route('/restaurants/<int:restaurant_id>')
+def restaurant_detail(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    reviews = Review.query.filter_by(restaurant_id=restaurant_id).all()
+    return render_template('restaurant_detail.html', restaurant=restaurant, reviews=reviews)
+
+@application.route('/restaurants/<int:restaurant_id>/upload_image', methods=['POST'])
+@login_required
+def upload_restaurant_image(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+
+    if 'image' not in request.files:
+        flash('No image uploaded.', 'danger')
+        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+
+    file = request.files['image']
+    if file.filename == '':
+        flash('No selected file.', 'warning')
+        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+
+    if file:
+        filename = secure_filename(file.filename)
+        path = os.path.join('app/static/images', filename)
+        file.save(path)
+
+        restaurant.image = filename
+        db.session.commit()
+
+        flash('Image uploaded successfully!', 'success')
+        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
