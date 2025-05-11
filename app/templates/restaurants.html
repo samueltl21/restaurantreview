@@ -25,13 +25,14 @@
     <div class="top-section-custom">
         {% for restaurant, avg_rating in top_restaurants %}
         <div class="top-card-custom">
-            <img src="{{ url_for('static', filename='images/image.jpg') }}" alt="{{ restaurant.name }}">
+            {% if restaurant.image %}
+                <img src="{{ url_for('static', filename='images/' ~ restaurant.image) }}" alt="{{ restaurant.name }}">
+            {% endif %}
             <p class="mt-2 mb-0"><strong>{{ restaurant.name }}</strong></p>
             <p class="caption">{{ avg_rating }} ⭐ average</p>
         </div>
         {% endfor %}
-    </div>
-
+    </div>    
 
     <!-- Categorized Restaurant Lists -->
     <h4 class="restaurant-subtitle">🍴 Explore More Restaurants by Category</h4>
