@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, DecimalField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, DateField, DecimalField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange
 
 class LoginForm(FlaskForm):
@@ -26,11 +26,12 @@ class ReviewForm(FlaskForm):
         ('American', 'American'), ('Mediterranean', 'Mediterranean'),
         ('Korean', 'Korean'), ('Vietnamese', 'Vietnamese'), ('Other', 'Other')
     ], validators=[DataRequired()])
-    date = DateField('Date of Visit', validators=[DataRequired()], format='%Y-%m-%d')
+    date = DateField('Date of Visit', format='%Y-%m-%d', validators=[DataRequired()])
     rating = SelectField('Your Rating', choices=[
         ('', 'Choose...'),
         ('1', '1 - Poor'), ('2', '2 - Fair'), ('3', '3 - Good'),
         ('4', '4 - Very Good'), ('5', '5 - Excellent')
     ], validators=[DataRequired()])
     spend = DecimalField('Amount Spent ($)', validators=[DataRequired(), NumberRange(min=0)], places=2)
+    comment = TextAreaField('Comment')
     submit = SubmitField('Submit Rating')

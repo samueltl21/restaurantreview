@@ -172,3 +172,76 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
   
+  document.addEventListener('DOMContentLoaded', function () {
+    const $restaurantInput = $('#restaurant-name');
+    const $suggestions = $('#restaurant-suggestions');
+    const $checkResult = $('#restaurant-check-result');
+    const $infoSection = $('#restaurant-info-section'); // location + cuisine
+    const $reviewSection = $('#review-fields-section'); // date, rating, spend
+  
+    // Autocomplete suggestions
+    $restaurantInput.on('input', function () {
+      const query = $(this).val().trim();
+      if (query.length < 2) {
+        $suggestions.empty();
+        return;
+      }
+  
+      $.get('/search_restaurants', { q: query }, function (data) {
+        $suggestions.empty();
+        data.forEach(name => {
+          $suggestions.append(`<button type="button" class="list-group-item list-group-item-action">${name}</button>`);
+        });
+      });
+    });
+  
+    // Click on suggestion
+    $suggestions.on('click', 'button', function () {
+      const selected = $(this).text();
+      $restaurantInput.val(selected);
+      $suggestions.empty();
+      $restaurantInput.trigger('blur');
+    });
+  
+    // Blur triggers check
+    $restaurantInput.on('blur', function () {
+      const name = $restaurantInput.val().trim();
+      if (!name) return;
+  
+      $.post('/check_restaurant', { restaurant_name: name }, function (data) {
+        if (data.status === 'exists') {
+          $('#location').val(data.location);
+          $('#cuisine').val(data.cuisine);
+  
+          $checkResult.text(data.message).css('color', 'green');
+          $infoSection.hide();
+          $reviewSection.show();
+        } else {
+          $('#location').val('');
+          $('#cuisine').val('');
+  
+          $checkResult.text("Restaurant not found. Please provide details.")
+                      .css('color', 'red');
+  
+          $infoSection.show();
+          $reviewSection.show();
+        }
+      }).fail(function () {
+        $checkResult.text("Error checking restaurant.").css('color', 'orange');
+      });
+    });
+  
+    // Clear state on focus
+    $restaurantInput.on('focus', function () {
+      $suggestions.empty();
+      $checkResult.text('');
+      $reviewSection.hide();
+      $infoSection.hide();
+    });
+  
+    // Clean up suggestions if clicked outside
+    $restaurantInput.on('blur', function () {
+      setTimeout(() => $suggestions.empty(), 150);
+    });
+  });
+  

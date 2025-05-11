@@ -85,15 +85,17 @@ def sign_up():
 @login_required
 def upload_reviews():
     form = ReviewForm()
-    
+
     if form.validate_on_submit():
+        # Get form data
         restaurant_name = form.restaurant.data.strip()
+        location = form.location.data.strip()
+        cuisine = form.cuisine.data.strip()
         rating = int(form.rating.data)
         date = form.date.data.strftime('%Y-%m-%d')
         spend = float(form.spend.data)
-        user_id = current_user.id
-        location = form.location.data.strip()
-        cuisine = form.cuisine.data
+
+        # Check if restaurant exists
 
         restaurant = Restaurant.query.filter_by(name=restaurant_name).first()
         if not restaurant:
@@ -101,21 +103,26 @@ def upload_reviews():
                 name=restaurant_name,
                 location=location,
                 cuisine=cuisine,
-                added_by=user_id
+                added_by=current_user.id
             )
             db.session.add(restaurant)
             db.session.flush()
 
-        existing_review = Review.query.filter_by(user_id=user_id, restaurant_id=restaurant.id).first()
+        existing_review = Review.query.filter_by(
+            user_id=current_user.id,
+            restaurant_id=restaurant.id,
+            date=date
+        ).first()
+
         if existing_review:
-            flash("You've already submitted a review for this restaurant.", "warning")
+            flash("You've already submitted a review for this restaurant on that date", "warning")
             return redirect(url_for("upload_reviews"))
 
         review = Review(
             rating=rating,
             date=date,
             spend=spend,
-            user_id=user_id,
+            user_id=current_user.id,
             restaurant_id=restaurant.id
         )
         db.session.add(review)
@@ -174,3 +181,30 @@ def view_shared_reviews(token):
     reviews = Review.query.filter(Review.id.in_(review_ids)).all()
 
     return render_template("shared_reviews.html", reviews=reviews)
+
+@application.route('/check_restaurant', methods=['POST'])
+def check_restaurant():
+    name = request.form.get('restaurant_name', '').strip()
+    if not name:
+        return jsonify({'status': 'error', 'message': 'No name provided'}), 400
+
+    restaurant = Restaurant.query.filter_by(name=name).first()
+    if restaurant:
+        return jsonify({
+            'status': 'exists',
+            'message': 'Restaurant found!',
+            'location': restaurant.location,
+            'cuisine': restaurant.cuisine
+        })
+    else:
+        return jsonify({'status': 'not_found', 'message': 'Restaurant not found.'})
+
+
+@application.route('/search_restaurants', methods=['GET'])
+def search_restaurants():
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify([])
+
+    matches = Restaurant.query.filter(Restaurant.name.ilike(f"%{query}%")).limit(10).all()
+    return jsonify([r.name for r in matches])
