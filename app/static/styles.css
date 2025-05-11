@@ -339,8 +339,8 @@ h1 {
 }
 
 .stat-circle {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background-color: var(--primary-light);
   color: white;
   border-radius: 50%;
@@ -350,6 +350,24 @@ h1 {
   font-weight: bold;
   margin: 0 auto 8px;
   box-shadow: 0 3px 10px rgba(124, 131, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.stat-circle:hover {
+  transform: scale(1.12);
+  box-shadow: 0 5px 15px rgba(124, 131, 255, 0.5);
+}
+
+.reviews-circle {
+  background-color: #7c83ff; /* Primary color */
+}
+
+.rating-circle {
+  background-color: #ff9800; /* Orange */
+}
+
+.spend-circle {
+  background-color: #4caf50; /* Green */
 }
 
 .stat-label {
