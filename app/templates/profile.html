@@ -1,14 +1,12 @@
-{% extends "base.html" %} {% block title %}My Profile | RestaurantReview{%
-endblock %} {% block content %}
+{% extends "base.html" %}
+{% block title %}My Profile | RestaurantReview{% endblock %}
+{% block content %}
 <div class="container mt-4">
-  <!-- Profile Header with Animation: Removed -->
 
   <div class="row justify-content-center">
-    <!-- Profile Info Card with Animation -->
     <div class="col-md-4 mb-4">
       <div class="card profile-card shadow animate-slide-right">
         <div class="card-body text-center">
-          <!-- Avatar with hover effect -->
           <div class="avatar-container mb-3">
             <img
               src="/static/images/default-avatar.png"
@@ -19,13 +17,10 @@ endblock %} {% block content %}
               <i class="bi bi-camera"></i>
             </div>
           </div>
-          <!-- Username with animated underline -->
           <h4 class="card-title fancy-title">Example</h4>
-          <!-- Email -->
           <p class="text-muted">
             <i class="bi bi-envelope-fill me-1"></i>test@example.com
           </p>
-          <!-- Stats row -->
           <div class="row mt-3 stats-row text-center">
             <div class="col-4">
               <div class="stat-circle">5</div>
@@ -43,130 +38,7 @@ endblock %} {% block content %}
         </div>
       </div>
     </div>
-
-    <!--
-    Data Summary with Animation - Modified to match profile card height
-    <div class="col-md-8">
-      <div class="card preference-card shadow animate-slide-left h-100">
-        <div class="card-header bg-primary text-white">
-          <i class="bi bi-pie-chart-fill me-2"></i> Your Dining Preferences
-        </div>
-        <div class="card-body d-flex flex-column justify-content-center">
-          <div class="row">
-            Most Frequent Category
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-box2-heart"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Most Eaten Category</h6>
-                  <p class="mb-0"><strong>Japanese</strong></p>
-                </div>
-              </div>
-            </div>
-
-            Highest Rated
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-trophy"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Highest Rated Restaurant</h6>
-                  <p class="mb-0">
-                    <strong>Bella Pasta</strong>
-                    <span class="rating-pill">4.9/5</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            Favorite Restaurant
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-pin-map"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Favorite Restaurant</h6>
-                  <p class="mb-0">
-                    <strong>Tokyo Sushi Bar</strong>
-                    <span class="visit-badge">3 visits</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            Latest Dining
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-calendar-check"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Latest Dining</h6>
-                  <p class="mb-0">
-                    <strong>Burger Town</strong>
-                    <span class="date-badge">Apr 20, 2025</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Small Stats Cards -->
-      <!-- <div class="row mt-3">
-        <div class="col-md-4 mb-3">
-          <div class="card mini-stat-card shadow animate-pop">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-0">Total Spent</h6>
-                  <h3 class="mb-0">$160</h3>
-                </div>
-                <div class="mini-stat-icon">
-                  <i class="bi bi-cash-coin"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div class="card mini-stat-card shadow animate-pop delay-1">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-0">Cuisines</h6>
-                  <h3 class="mb-0">5</h3>
-                </div>
-                <div class="mini-stat-icon">
-                  <i class="bi bi-egg-fried"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div class="card mini-stat-card shadow animate-pop delay-2">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-0">Avg Rating</h6>
-                  <h3 class="mb-0">4.4</h3>
-                </div>
-                <div class="mini-stat-icon">
-                  <i class="bi bi-star-half"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
+  </div>
 
   <!-- Reviews Table Card with Animation -->
   <div class="card review-card shadow mb-4 animate-fade-up">
@@ -176,7 +48,7 @@ endblock %} {% block content %}
     <div class="card-body">
       <div class="text-center mb-3">
         <button id="shareButton" class="btn btn-outline-primary">Share Selected Reviews</button>
-      </div>      
+      </div>
       <div class="table-responsive">
         <table class="table table-hover review-table" id="reviewTable">
           <thead>
@@ -193,14 +65,12 @@ endblock %} {% block content %}
           <tbody>
             {% for review in user.reviews %}
             <tr class="table-row-animate">
-              <td><input type="checkbox" class="share-checkbox" value="{{ review.id }}"></td>            
+              <td><input type="checkbox" class="share-checkbox" value="{{ review.id }}"></td>
               <td>{{ review.date }}</td>
               <td class="fw-bold">{{ review.restaurant.name }}</td>
               <td>{{ review.restaurant.location }}</td>
               <td>
-                <span
-                  class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}"
-                >
+                <span class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}">
                   {{ review.restaurant.cuisine }}
                 </span>
               </td>
@@ -208,7 +78,8 @@ endblock %} {% block content %}
                 <div class="star-rating">
                   {% for i in range(review.rating) %}
                   <span class="star filled">★</span>
-                  {% endfor %} {% for i in range(5 - review.rating) %}
+                  {% endfor %}
+                  {% for i in range(5 - review.rating) %}
                   <span class="star">★</span>
                   {% endfor %}
                 </div>
@@ -220,13 +91,10 @@ endblock %} {% block content %}
         </table>
       </div>
 
-      <!-- Pagination -->
       <nav aria-label="Review pagination" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-              >Previous</a
-            >
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
           </li>
           <li class="page-item active"><a class="page-link" href="#">1</a></li>
           <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -238,10 +106,7 @@ endblock %} {% block content %}
       </nav>
     </div>
   </div>
-
-  <!-- Add Review Button: Removed -->
 </div>
 
-<!-- Add reference to external JavaScript file -->
 <script src="/static/script.js"></script>
 {% endblock %}
