@@ -1,9 +1,9 @@
 from app import application, db
 from flask import render_template, request, redirect, url_for, flash, session, jsonify
-from app.models import User, Restaurant, Review, SharedReview, SharedComment
+from app.models import User, Restaurant, Review, SharedReview, SharedComment, SharedReviewEntry
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from sqlalchemy import func
+from sqlalchemy import func, asc
 from app.forms import LoginForm, SignUpForm, ReviewForm
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
@@ -256,7 +256,6 @@ def upload_restaurant_image(restaurant_id):
         flash('Image uploaded successfully!', 'success')
         return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
 
-
 @application.route("/share_reviews", methods=["POST"])
 @login_required
 def share_reviews():
@@ -271,29 +270,62 @@ def share_reviews():
     if not recipient:
         return jsonify({"success": False, "message": "Recipient not found"}), 404
 
-    # 🔁 Check if a shared thread already exists
+    # Ensure unique review IDs
+    review_ids = list(set(review_ids))
+
     existing_thread = SharedReview.query.filter(
         ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == recipient_id)) |
         ((SharedReview.sender_id == recipient_id) & (SharedReview.recipient_id == current_user.id))
     ).first()
 
     if existing_thread:
-        # 🔄 Append new review IDs to the existing list
         existing_ids = json.loads(existing_thread.review_ids)
-        combined_ids = list(set(existing_ids + review_ids))
+        new_ids = [rid for rid in review_ids if rid not in existing_ids]
+        if not new_ids:
+            return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+
+        # Update review ID list
+        combined_ids = existing_ids + new_ids
         existing_thread.review_ids = json.dumps(combined_ids)
+
+        for review_id in new_ids:
+            # 🛡️ Extra safety check to avoid duplication
+            already_exists = SharedReviewEntry.query.filter_by(
+                shared_review_id=existing_thread.id,
+                review_id=review_id
+            ).first()
+            if not already_exists:
+                entry = SharedReviewEntry(
+                    shared_review_id=existing_thread.id,
+                    review_id=review_id,
+                    shared_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                )
+                db.session.add(entry)
+
         db.session.commit()
         return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+
     else:
-        # 🆕 Create a new thread
         token = str(uuid.uuid4())
         shared = SharedReview(
             sender_id=current_user.id,
             recipient_id=recipient.id,
             token=token,
-            review_ids=json.dumps(review_ids)
+            review_ids=json.dumps(review_ids),
+            shared_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )
+
         db.session.add(shared)
+        db.session.flush()  # Get shared.id
+
+        for review_id in review_ids:
+            entry = SharedReviewEntry(
+                shared_review_id=shared.id,
+                review_id=review_id,
+                shared_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+            db.session.add(entry)
+
         db.session.commit()
         return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
 
@@ -336,24 +368,59 @@ def view_shared_conversation(user_id):
         flash("Cannot view a conversation with yourself.", "warning")
         return redirect(url_for("profile"))
 
-    # Get all shared review threads between the two users
+    # Get all threads between the current user and the other user
     shared_threads = SharedReview.query.filter(
         ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == other_user.id)) |
         ((SharedReview.sender_id == other_user.id) & (SharedReview.recipient_id == current_user.id))
     ).all()
 
-    all_review_ids = []
-    shared_ids = []
-    for thread in shared_threads:
-        all_review_ids.extend(json.loads(thread.review_ids))
-        shared_ids.append(thread.id)
+    if not shared_threads:
+        flash("No shared history found with this user.", "info")
+        return redirect(url_for("shared_with"))
 
-    reviews = Review.query.filter(Review.id.in_(all_review_ids)).all()
-    comments = SharedComment.query.filter(SharedComment.shared_review_id.in_(shared_ids)).order_by(SharedComment.timestamp).all()
+    shared_thread_ids = [thread.id for thread in shared_threads]
 
+    # Get all SharedReviewEntry rows (review_id, shared_at) for the threads
+    entry_data = (
+        db.session.query(SharedReviewEntry, Review, SharedReview, User)
+        .join(Review, SharedReviewEntry.review_id == Review.id)
+        .join(SharedReview, SharedReviewEntry.shared_review_id == SharedReview.id)
+        .join(User, SharedReview.sender_id == User.id)
+        .filter(SharedReviewEntry.shared_review_id.in_(shared_thread_ids))
+        .all()
+    )
+
+    timeline = []
+
+    for entry, review, thread, sender in entry_data:
+        timeline.append({
+            "type": "review",
+            "timestamp": entry.shared_at,
+            "data": review,
+            "sender": sender
+        })
+
+    # Get all comments on those threads
+    comments = SharedComment.query.filter(
+        SharedComment.shared_review_id.in_(shared_thread_ids)
+    ).order_by(SharedComment.timestamp).all()
+
+    for comment in comments:
+        timeline.append({
+            "type": "comment",
+            "timestamp": comment.timestamp,
+            "data": comment,
+            "sender": comment.user
+        })
+
+    # Sort everything by timestamp (ascending)
+    timeline.sort(key=lambda x: x["timestamp"])
+
+    # Handle new comment POST
     if request.method == "POST":
         content = request.form.get("comment", "").strip()
-        if content and shared_threads:
+        if content:
+            # Assign the comment to the first thread
             comment = SharedComment(
                 shared_review_id=shared_threads[0].id,
                 user_id=current_user.id,
@@ -364,7 +431,7 @@ def view_shared_conversation(user_id):
             db.session.commit()
             return redirect(url_for("view_shared_conversation", user_id=other_user.id))
 
-    return render_template("shared_conversation.html", other_user=other_user, reviews=reviews, comments=comments)
+    return render_template("shared_conversation.html", other_user=other_user, items=timeline)
 
 @application.route('/shared_with')
 @login_required

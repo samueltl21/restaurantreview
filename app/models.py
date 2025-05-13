@@ -53,6 +53,9 @@ class SharedReview(db.Model):
     recipient_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
     token: so.Mapped[str] = so.mapped_column(sa.String(64), unique=True, nullable=False)
     review_ids: so.Mapped[str] = so.mapped_column(sa.Text, nullable=False)  # JSON string of review IDs
+    shared_at: so.Mapped[str] = so.mapped_column(sa.String(30), nullable=False)  # new field for timestamp
+
+    
 
     sender: so.Mapped["User"] = so.relationship(foreign_keys=[sender_id])
     recipient: so.Mapped["User"] = so.relationship(foreign_keys=[recipient_id])
@@ -66,3 +69,12 @@ class SharedComment(db.Model):
     
     user: so.Mapped["User"] = so.relationship()
     shared_review: so.Mapped["SharedReview"] = so.relationship()
+
+class SharedReviewEntry(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    shared_review_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('shared_review.id'), nullable=False)
+    review_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('review.id'), nullable=False)
+    shared_at: so.Mapped[str] = so.mapped_column(sa.String(30), nullable=False)
+
+    shared_review: so.Mapped["SharedReview"] = so.relationship()
+    review: so.Mapped["Review"] = so.relationship()
