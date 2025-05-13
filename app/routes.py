@@ -126,6 +126,11 @@ def upload_reviews():
             user_id=current_user.id,
             restaurant_id=restaurant.id
         )
+        if form.review_image.data:
+            file = form.review_image.data
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
+            review.image = filename   
         db.session.add(review)
         db.session.commit()
         flash("Thanks for your review!", "success")
