@@ -42,48 +42,51 @@ def about_us():
 @application.route('/profile')
 @login_required
 def profile():
-    # Get the current user's reviews
-    user_reviews = (
-        db.session.query(Review, Restaurant)
-        .join(Restaurant, Review.restaurant_id == Restaurant.id)
-        .filter(Review.user_id == current_user.id)
-        .all()
-    )
-    
-    # Process data for Cuisine Preference Pie Chart
+    # Get all reviews from the current user
+    user_reviews = Review.query.filter_by(user_id=current_user.id).all()
+
+    # Initialize dictionaries for chart data
     cuisine_counts = {}
-    # Process data for Average Spend per Cuisine
     cuisine_spend = {}
     cuisine_spend_count = {}
-    
-    for review, restaurant in user_reviews:
-        # Count cuisines
-        cuisine = restaurant.cuisine
-        if cuisine in cuisine_counts:
-            cuisine_counts[cuisine] += 1
-        else:
-            cuisine_counts[cuisine] = 1
-            
-        # Sum spend per cuisine
-        if cuisine in cuisine_spend:
-            cuisine_spend[cuisine] += review.spend
-            cuisine_spend_count[cuisine] += 1
-        else:
-            cuisine_spend[cuisine] = review.spend
-            cuisine_spend_count[cuisine] = 1
-    
+
+    total_rating = 0
+    total_spend = 0
+    num_reviews = len(user_reviews)
+
+    for review in user_reviews:
+        if review.restaurant:  # Ensure restaurant relationship is loaded
+            cuisine = review.restaurant.cuisine
+
+            # Count for cuisine chart
+            cuisine_counts[cuisine] = cuisine_counts.get(cuisine, 0) + 1
+
+            # Sum for avg spend per cuisine
+            cuisine_spend[cuisine] = cuisine_spend.get(cuisine, 0) + review.spend
+            cuisine_spend_count[cuisine] = cuisine_spend_count.get(cuisine, 0) + 1
+
+            # Sum for overall stats
+            total_rating += review.rating
+            total_spend += review.spend
+
     # Calculate average spend per cuisine
-    avg_spend = {}
-    for cuisine in cuisine_spend:
-        avg_spend[cuisine] = round(cuisine_spend[cuisine] / cuisine_spend_count[cuisine], 2)
-    
+    avg_spend_by_cuisine = {
+        cuisine: round(cuisine_spend[cuisine] / cuisine_spend_count[cuisine], 2)
+        for cuisine in cuisine_spend
+    }
+
     # Prepare data for charts
     cuisine_labels = list(cuisine_counts.keys())
     cuisine_values = list(cuisine_counts.values())
-    
-    avg_spend_labels = list(avg_spend.keys())
-    avg_spend_values = list(avg_spend.values())
-    
+
+    avg_spend_labels = list(avg_spend_by_cuisine.keys())
+    avg_spend_values = list(avg_spend_by_cuisine.values())
+
+    # Compute overall averages
+    avg_rating = round(total_rating / num_reviews, 1) if num_reviews > 0 else 0
+    avg_spend = round(total_spend / num_reviews, 2) if num_reviews > 0 else 0
+
+    # Get other users for sharing dropdown
     all_users = User.query.filter(User.id != current_user.id).all()
 
     return render_template(
@@ -93,24 +96,11 @@ def profile():
         cuisine_values=cuisine_values,
         avg_spend_labels=avg_spend_labels,
         avg_spend_values=avg_spend_values,
+        avg_rating=avg_rating,
+        avg_spend=avg_spend,
         all_users=all_users
     )
 
-@application.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-
-        user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('index'))
-        else:
-            flash('Invalid email or password!', 'danger')
-    return render_template('login.html', form=form)
 
 @application.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
