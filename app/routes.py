@@ -270,17 +270,31 @@ def share_reviews():
     if not recipient:
         return jsonify({"success": False, "message": "Recipient not found"}), 404
 
-    token = str(uuid.uuid4())
-    shared = SharedReview(
-        sender_id=current_user.id,
-        recipient_id=recipient.id,
-        token=token,
-        review_ids=json.dumps(review_ids)
-    )
-    db.session.add(shared)
-    db.session.commit()
+    # 🔁 Check if a shared thread already exists
+    existing_thread = SharedReview.query.filter(
+        ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == recipient_id)) |
+        ((SharedReview.sender_id == recipient_id) & (SharedReview.recipient_id == current_user.id))
+    ).first()
 
-    return jsonify({"success": True, "url": url_for("view_shared_reviews", token=token)})
+    if existing_thread:
+        # 🔄 Append new review IDs to the existing list
+        existing_ids = json.loads(existing_thread.review_ids)
+        combined_ids = list(set(existing_ids + review_ids))
+        existing_thread.review_ids = json.dumps(combined_ids)
+        db.session.commit()
+        return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+    else:
+        # 🆕 Create a new thread
+        token = str(uuid.uuid4())
+        shared = SharedReview(
+            sender_id=current_user.id,
+            recipient_id=recipient.id,
+            token=token,
+            review_ids=json.dumps(review_ids)
+        )
+        db.session.add(shared)
+        db.session.commit()
+        return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
 
 @application.route('/shared/<token>', methods=["GET", "POST"])
 @login_required
@@ -312,3 +326,56 @@ def view_shared_reviews(token):
 
     return render_template("shared_reviews.html", reviews=reviews, sender=sender, recipient=recipient, comments=comments)
 
+@application.route('/shared/conversation/<int:user_id>', methods=["GET", "POST"])
+@login_required
+def view_shared_conversation(user_id):
+    other_user = User.query.get_or_404(user_id)
+
+    if other_user.id == current_user.id:
+        flash("Cannot view a conversation with yourself.", "warning")
+        return redirect(url_for("profile"))
+
+    # Get all shared review threads between the two users
+    shared_threads = SharedReview.query.filter(
+        ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == other_user.id)) |
+        ((SharedReview.sender_id == other_user.id) & (SharedReview.recipient_id == current_user.id))
+    ).all()
+
+    all_review_ids = []
+    shared_ids = []
+    for thread in shared_threads:
+        all_review_ids.extend(json.loads(thread.review_ids))
+        shared_ids.append(thread.id)
+
+    reviews = Review.query.filter(Review.id.in_(all_review_ids)).all()
+    comments = SharedComment.query.filter(SharedComment.shared_review_id.in_(shared_ids)).order_by(SharedComment.timestamp).all()
+
+    if request.method == "POST":
+        content = request.form.get("comment", "").strip()
+        if content and shared_threads:
+            comment = SharedComment(
+                shared_review_id=shared_threads[0].id,  # Use first thread ID
+                user_id=current_user.id,
+                content=content,
+                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+            db.session.add(comment)
+            db.session.commit()
+            return redirect(url_for("view_shared_conversation", user_id=other_user.id))
+
+    return render_template("shared_conversation.html", other_user=other_user, reviews=reviews, comments=comments)
+
+@application.route('/shared_with')
+@login_required
+def shared_with():
+    threads = SharedReview.query.filter(
+        (SharedReview.sender_id == current_user.id) | 
+        (SharedReview.recipient_id == current_user.id)
+    ).all()
+
+    user_ids = set()
+    for thread in threads:
+        user_ids.add(thread.sender_id if thread.sender_id != current_user.id else thread.recipient_id)
+
+    users = User.query.filter(User.id.in_(user_ids)).all()
+    return render_template("shared_with.html", shared_users=users)
