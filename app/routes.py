@@ -438,3 +438,16 @@ def shared_with():
     users = User.query.filter(User.id.in_(user_ids)).all()
     return render_template("shared_with.html", shared_users=users)
 
+@application.route('/search_users', methods=['GET'])
+@login_required
+def search_users():
+    query = request.args.get('q', '').strip().lower()
+    if not query:
+        return jsonify([])
+
+    matches = User.query.filter(
+        User.name.ilike(f'%{query}%'),
+        User.id != current_user.id
+    ).limit(10).all()
+
+    return jsonify([{"id": u.id, "name": u.name} for u in matches])

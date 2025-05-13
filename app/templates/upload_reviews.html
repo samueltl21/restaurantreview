@@ -8,15 +8,19 @@ endblock %} {% block content %}
       <h3>Rate a Restaurant</h3>
       <form method="POST" id="review-form">
         {{ form.hidden_tag() }}
-      
+
         <!-- Restaurant Name (Always visible) -->
         <div class="mb-3 position-relative">
-          {{ form.restaurant.label }}<br>
+          {{ form.restaurant.label }}
           {{ form.restaurant(class="form-control", id="restaurant-name", autocomplete="off") }}
+          <div class="form-text text-muted">
+            It will automatically check if the restaurant already exists in the database or not.
+          </div>
           <div id="restaurant-suggestions" class="list-group position-absolute w-100" style="z-index:1050;"></div>
           <div id="restaurant-check-result" class="form-text mt-1"></div>
         </div>
-      
+
+
         <!-- These will appear only if restaurant is NOT found -->
         <div id="restaurant-info-section" style="display: none;">
           <div class="mb-3">
@@ -28,7 +32,7 @@ endblock %} {% block content %}
             {{ form.cuisine(class="form-select", id="cuisine") }}
           </div>
         </div>
-      
+
         <!-- Review fields (appear after checking name) -->
         <div id="review-fields-section" style="display: none;">
           <div class="mb-3">
@@ -46,13 +50,13 @@ endblock %} {% block content %}
           <div class="mb-3">
             {{ form.comment.label }}<br>
             {{ form.comment(class="form-control", rows=3) }}
-          </div>          
+          </div>
           <div class="center-container">
             {{ form.submit(class="btn btn-success") }}
           </div>
         </div>
-      </form>      
+      </form>
     </div>
   </div>
-  </div>
-  {% endblock %}
+</div>
+{% endblock %}

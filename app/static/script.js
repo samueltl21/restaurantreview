@@ -316,3 +316,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   
+  document.addEventListener("DOMContentLoaded", function () {
+    const $userInput = $('#recipientUserInput');
+    const $userSuggestions = $('#user-suggestions');
+    const $userIdHidden = $('#recipientUser');
+  
+    if ($userInput.length > 0) {
+      $userInput.on('input', function () {
+        const query = $(this).val().trim();
+        if (query.length < 2) {
+          $userSuggestions.empty();
+          return;
+        }
+  
+        $.get('/search_users', { q: query }, function (data) {
+          $userSuggestions.empty();
+          data.forEach(user => {
+            $userSuggestions.append(
+              `<button type="button" class="list-group-item list-group-item-action" data-id="${user.id}">${user.name}</button>`
+            );
+          });
+        });
+      });
+  
+      $userSuggestions.on('click', 'button', function () {
+        const selectedName = $(this).text();
+        const selectedId = $(this).data('id');
+        $userInput.val(selectedName);
+        $userIdHidden.val(selectedId);
+        $userSuggestions.empty();
+      });
+  
+      $userInput.on('blur', function () {
+        setTimeout(() => $userSuggestions.empty(), 150);
+      });
+    }
+  });
+  

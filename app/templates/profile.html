@@ -95,12 +95,15 @@ endblock %} {% block content %}
       </div>
       <div class="card-body">
         <div class="text-center mb-3">
-          <select id="recipientUser" class="form-select mb-2" style="max-width: 300px; margin: 0 auto;">
-            <option value="">-- Select a user to share with --</option>
-            {% for u in all_users %}
-            <option value="{{ u.id }}">{{ u.name }}</option>
-            {% endfor %}
-          </select>
+          <div class="mx-auto mb-3" style="max-width: 300px;">
+            <div class="position-relative">
+              <input type="text" class="form-control" id="recipientUserInput"
+                     placeholder="Start typing a user name..." autocomplete="off" />
+              <div id="user-suggestions" class="list-group position-absolute w-100"
+                   style="top: 100%; z-index: 1050;"></div>
+              <input type="hidden" id="recipientUser" />
+            </div>
+          </div>                            
 
           <button id="shareButton" class="btn btn-outline-primary">
             Share Selected Reviews
