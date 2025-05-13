@@ -141,20 +141,57 @@ def logout():
     return redirect(url_for('index'))
 
 @application.route("/analytics")
+@login_required
 def analytics():
-    top_restaurants = (
-        db.session.query(Restaurant.name, func.count(Review.id).label("review_count"))
-        .join(Review)
-        .group_by(Restaurant.id)
-        .order_by(func.count(Review.id).desc())
-        .limit(3)
+    # Get the current user's reviews
+    user_reviews = (
+        db.session.query(Review, Restaurant)
+        .join(Restaurant, Review.restaurant_id == Restaurant.id)
+        .filter(Review.user_id == current_user.id)
         .all()
     )
-
-    labels = [r[0] for r in top_restaurants]
-    values = [r[1] for r in top_restaurants]
-
-    return render_template("analytics.html", labels=labels, values=values)
+    
+    # Process data for Cuisine Preference Pie Chart
+    cuisine_counts = {}
+    # Process data for Average Spend per Cuisine
+    cuisine_spend = {}
+    cuisine_spend_count = {}
+    
+    for review, restaurant in user_reviews:
+        # Count cuisines
+        cuisine = restaurant.cuisine
+        if cuisine in cuisine_counts:
+            cuisine_counts[cuisine] += 1
+        else:
+            cuisine_counts[cuisine] = 1
+            
+        # Sum spend per cuisine
+        if cuisine in cuisine_spend:
+            cuisine_spend[cuisine] += review.spend
+            cuisine_spend_count[cuisine] += 1
+        else:
+            cuisine_spend[cuisine] = review.spend
+            cuisine_spend_count[cuisine] = 1
+    
+    # Calculate average spend per cuisine
+    avg_spend = {}
+    for cuisine in cuisine_spend:
+        avg_spend[cuisine] = round(cuisine_spend[cuisine] / cuisine_spend_count[cuisine], 2)
+    
+    # Prepare data for charts
+    cuisine_labels = list(cuisine_counts.keys())
+    cuisine_values = list(cuisine_counts.values())
+    
+    avg_spend_labels = list(avg_spend.keys())
+    avg_spend_values = list(avg_spend.values())
+    
+    return render_template(
+        "analytics.html", 
+        cuisine_labels=cuisine_labels,
+        cuisine_values=cuisine_values,
+        avg_spend_labels=avg_spend_labels,
+        avg_spend_values=avg_spend_values
+    )
 
 # Temp in-memory storage (use DB or Redis in production)
 shared_reviews_store = {}
