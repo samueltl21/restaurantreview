@@ -2,16 +2,21 @@
 {% block title %}Shared Inbox{% endblock %}
 {% block content %}
 <div class="container mt-4">
-  <h3>People You've Shared With</h3>
-  <ul class="list-group">
-    {% for user in shared_users %}
-    <li class="list-group-item d-flex justify-content-between">
-      {{ user.name }}
-      <a href="{{ url_for('view_shared_conversation', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
-        View Conversation
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
+  <h3 class="text-center mb-4">People You've Shared With</h3>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <ul class="list-group">
+        {% for user in shared_users %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ user.name }}
+          <a href="{{ url_for('view_shared_conversation', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
+            View Conversation
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
 {% endblock %}
