@@ -249,3 +249,70 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Cuisine Preference Pie Chart
+    if (document.getElementById("cuisineChart")) {
+      const ctx1 = document.getElementById("cuisineChart").getContext("2d");
+      new Chart(ctx1, {
+        type: "pie",
+        data: {
+          labels: cuisineLabels,
+          datasets: [{
+            data: cuisineValues,
+            backgroundColor: [
+              "#f94144", "#f3722c", "#f8961e", "#f9c74f",
+              "#90be6d", "#43aa8b", "#577590", "#6a4c93"
+            ]
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: "Your Cuisine Preferences"
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      });
+    }
+  
+    // Average Spend per Cuisine Bar Chart
+    if (document.getElementById("spendChart")) {
+      const ctx2 = document.getElementById("spendChart").getContext("2d");
+      new Chart(ctx2, {
+        type: "bar",
+        data: {
+          labels: spendLabels,
+          datasets: [{
+            label: "Average Spend ($)",
+            data: spendValues,
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: "Average Spend by Cuisine"
+            },
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  });
+  
