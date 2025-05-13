@@ -280,7 +280,7 @@ def share_reviews():
     db.session.add(shared)
     db.session.commit()
 
-    return redirect(url_for("view_shared_reviews", token=token))
+    return jsonify({"success": True, "url": url_for("view_shared_reviews", token=token)})
 
 @application.route('/shared/<token>', methods=["GET", "POST"])
 @login_required
