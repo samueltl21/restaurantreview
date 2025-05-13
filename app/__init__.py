@@ -10,6 +10,8 @@ load_dotenv()
 
 application = Flask(__name__)
 application.config.from_object(Config)
+application.config['UPLOAD_FOLDER'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'images')
+
 
 db = SQLAlchemy(application)
 migrate = Migrate(application, db)
