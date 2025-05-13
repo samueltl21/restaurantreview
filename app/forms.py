@@ -33,5 +33,6 @@ class ReviewForm(FlaskForm):
         ('4', '4 - Very Good'), ('5', '5 - Excellent')
     ], validators=[DataRequired()])
     spend = DecimalField('Amount Spent ($)', validators=[DataRequired(), NumberRange(min=0)], places=2)
+    review_image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     comment = TextAreaField('Comment')
     submit = SubmitField('Submit Rating')
