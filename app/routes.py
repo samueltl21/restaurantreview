@@ -7,6 +7,7 @@ from sqlalchemy import func
 from app.forms import LoginForm, SignUpForm, ReviewForm
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
+import os
 import uuid
 import json
 
