@@ -7,7 +7,7 @@ endblock %} {% block content %}
   <div class="home-title text-center text-white position-absolute top-50 start-50 translate-middle">
     <h1 class="display-4">Discover Best Restaurants in Perth</h1>
     <p class="lead">Taste it. Rate it. Share it.</p>
-    {% if 'user_id' not in session %}
+    {% if not current_user.is_authenticated %}
     <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
     <a href="{{ url_for('sign_up') }}" class="btn btn-register">Sign Up</a>
     {% endif %}
