@@ -249,3 +249,25 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("upload-prompt").style.display = "none";
     document.getElementById("upload-form").style.display = "block";
   }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const imgInput = document.getElementById('review_image');
+    if (imgInput) {
+        imgInput.addEventListener('change', function () {
+            const file = this.files && this.files[0];
+            if (!file) return;
+            
+            let preview = document.getElementById('image-preview');
+            if (!preview) {
+                preview = document.createElement('img');
+                preview.id = 'image-preview';
+                preview.style.maxWidth = '200px';
+                preview.style.marginTop = '10px';
+              
+                this.parentNode.appendChild(preview);
+            }
+            
+            preview.src = URL.createObjectURL(file);
+        });
+    }
+});
