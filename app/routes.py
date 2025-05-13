@@ -1,12 +1,14 @@
 from app import application, db
 from flask import render_template, request, redirect, url_for, flash, session, jsonify
-from app.models import User, Restaurant, Review
+from app.models import User, Restaurant, Review, SharedReview, SharedComment
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import func
 from app.forms import LoginForm, SignUpForm, ReviewForm
 from flask_login import login_user, logout_user, current_user, login_required
+from datetime import datetime
 import uuid
+import json
 
 @application.route('/')
 def index():
@@ -81,13 +83,16 @@ def profile():
     avg_spend_labels = list(avg_spend.keys())
     avg_spend_values = list(avg_spend.values())
     
+    all_users = User.query.filter(User.id != current_user.id).all()
+
     return render_template(
-        'profile.html', 
+        'profile.html',
         user=current_user,
         cuisine_labels=cuisine_labels,
         cuisine_values=cuisine_values,
         avg_spend_labels=avg_spend_labels,
-        avg_spend_values=avg_spend_values
+        avg_spend_values=avg_spend_values,
+        all_users=all_users
     )
 
 @application.route('/login', methods=['GET', 'POST'])
@@ -251,9 +256,126 @@ def upload_restaurant_image(restaurant_id):
         return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
 
 
-@application.route('/share_review/<int:review_id>')
-def share_review(review_id):
-    review = Review.query.get_or_404(review_id)
-    restaurant = Restaurant.query.get_or_404(review.restaurant_id)
-    user = User.query.get_or_404(review.user_id)
-    return render_template('shared_reviews.html', review=review, restaurant=restaurant, user=user)
+@application.route("/share_reviews", methods=["POST"])
+@login_required
+def share_reviews():
+    data = request.get_json()
+    review_ids = data.get("review_ids")
+    recipient_id = data.get("recipient_id")
+
+    if not review_ids or not recipient_id:
+        return jsonify({"success": False, "message": "Missing data"}), 400
+
+    recipient = User.query.get(recipient_id)
+    if not recipient:
+        return jsonify({"success": False, "message": "Recipient not found"}), 404
+
+    # 🔁 Check if a shared thread already exists
+    existing_thread = SharedReview.query.filter(
+        ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == recipient_id)) |
+        ((SharedReview.sender_id == recipient_id) & (SharedReview.recipient_id == current_user.id))
+    ).first()
+
+    if existing_thread:
+        # 🔄 Append new review IDs to the existing list
+        existing_ids = json.loads(existing_thread.review_ids)
+        combined_ids = list(set(existing_ids + review_ids))
+        existing_thread.review_ids = json.dumps(combined_ids)
+        db.session.commit()
+        return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+    else:
+        # 🆕 Create a new thread
+        token = str(uuid.uuid4())
+        shared = SharedReview(
+            sender_id=current_user.id,
+            recipient_id=recipient.id,
+            token=token,
+            review_ids=json.dumps(review_ids)
+        )
+        db.session.add(shared)
+        db.session.commit()
+        return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+
+@application.route('/shared/<token>', methods=["GET", "POST"])
+@login_required
+def view_shared_reviews(token):
+    shared = SharedReview.query.filter_by(token=token).first_or_404()
+
+    if current_user.id not in [shared.sender_id, shared.recipient_id]:
+        flash("You are not authorized to view this page.", "danger")
+        return redirect(url_for("index"))
+
+    if request.method == "POST":
+        content = request.form.get("comment", "").strip()
+        if content:
+            new_comment = SharedComment(
+                shared_review_id=shared.id,
+                user_id=current_user.id,
+                content=content,
+                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect(url_for("view_shared_reviews", token=token))
+
+    review_ids = json.loads(shared.review_ids)
+    reviews = Review.query.filter(Review.id.in_(review_ids)).all()
+    sender = User.query.get(shared.sender_id)
+    recipient = User.query.get(shared.recipient_id)
+    comments = SharedComment.query.filter_by(shared_review_id=shared.id).order_by(SharedComment.timestamp).all()
+
+    return render_template("shared_reviews.html", reviews=reviews, sender=sender, recipient=recipient, comments=comments)
+
+@application.route('/shared/conversation/<int:user_id>', methods=["GET", "POST"])
+@login_required
+def view_shared_conversation(user_id):
+    other_user = User.query.get_or_404(user_id)
+
+    if other_user.id == current_user.id:
+        flash("Cannot view a conversation with yourself.", "warning")
+        return redirect(url_for("profile"))
+
+    # Get all shared review threads between the two users
+    shared_threads = SharedReview.query.filter(
+        ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == other_user.id)) |
+        ((SharedReview.sender_id == other_user.id) & (SharedReview.recipient_id == current_user.id))
+    ).all()
+
+    all_review_ids = []
+    shared_ids = []
+    for thread in shared_threads:
+        all_review_ids.extend(json.loads(thread.review_ids))
+        shared_ids.append(thread.id)
+
+    reviews = Review.query.filter(Review.id.in_(all_review_ids)).all()
+    comments = SharedComment.query.filter(SharedComment.shared_review_id.in_(shared_ids)).order_by(SharedComment.timestamp).all()
+
+    if request.method == "POST":
+        content = request.form.get("comment", "").strip()
+        if content and shared_threads:
+            comment = SharedComment(
+                shared_review_id=shared_threads[0].id,  # Use first thread ID
+                user_id=current_user.id,
+                content=content,
+                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+            db.session.add(comment)
+            db.session.commit()
+            return redirect(url_for("view_shared_conversation", user_id=other_user.id))
+
+    return render_template("shared_conversation.html", other_user=other_user, reviews=reviews, comments=comments)
+
+@application.route('/shared_with')
+@login_required
+def shared_with():
+    threads = SharedReview.query.filter(
+        (SharedReview.sender_id == current_user.id) | 
+        (SharedReview.recipient_id == current_user.id)
+    ).all()
+
+    user_ids = set()
+    for thread in threads:
+        user_ids.add(thread.sender_id if thread.sender_id != current_user.id else thread.recipient_id)
+
+    users = User.query.filter(User.id.in_(user_ids)).all()
+    return render_template("shared_with.html", shared_users=users)

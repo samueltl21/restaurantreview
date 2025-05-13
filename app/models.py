@@ -3,6 +3,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db
 from flask_login import UserMixin
+import json
 
 class User(db.Model, UserMixin):
     id : so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -45,3 +46,23 @@ class Review(db.Model):
 
     def __repr__(self):
         return f"<Review {self.id}>"
+    
+class SharedReview(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    sender_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
+    recipient_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
+    token: so.Mapped[str] = so.mapped_column(sa.String(64), unique=True, nullable=False)
+    review_ids: so.Mapped[str] = so.mapped_column(sa.Text, nullable=False)  # JSON string of review IDs
+
+    sender: so.Mapped["User"] = so.relationship(foreign_keys=[sender_id])
+    recipient: so.Mapped["User"] = so.relationship(foreign_keys=[recipient_id])
+
+class SharedComment(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    shared_review_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('shared_review.id'), nullable=False)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
+    content: so.Mapped[str] = so.mapped_column(sa.Text, nullable=False)
+    timestamp: so.Mapped[str] = so.mapped_column(sa.String(30), nullable=False)
+    
+    user: so.Mapped["User"] = so.relationship()
+    shared_review: so.Mapped["SharedReview"] = so.relationship()

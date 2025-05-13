@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Conversation with {{ other_user.name }}{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Shared Reviews with {{ other_user.name }}</h3>
+
+  {% if reviews %}
+  <ul class="list-group mb-3">
+    {% for review in reviews %}
+    <li class="list-group-item">
+      <strong>{{ review.restaurant.name }}</strong><br>
+      {{ review.rating }} ★ on {{ review.date }} – ${{ "%.2f"|format(review.spend) }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No shared reviews yet.</p>
+  {% endif %}
+
+  <hr>
+  <h5>Comments</h5>
+  <ul class="list-group mb-3">
+    {% for comment in comments %}
+    <li class="list-group-item">
+      <strong>{{ comment.user.name }}</strong>: {{ comment.content }}
+      <br><small class="text-muted">{{ comment.timestamp }}</small>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <form method="POST">
+    <div class="mb-2">
+      <textarea name="comment" class="form-control" placeholder="Write a comment..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Post Comment</button>
+  </form>
+</div>
+{% endblock %}

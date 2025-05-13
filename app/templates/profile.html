@@ -6,11 +6,7 @@ endblock %} {% block content %}
       <div class="card profile-card shadow animate-slide-right">
         <div class="card-body text-center">
           <div class="avatar-container mb-3">
-            <img
-              src="/static/images/default-avatar.png"
-              class="profile-avatar"
-              alt="Avatar"
-            />
+            <img src="/static/images/default-avatar.png" class="profile-avatar" alt="Avatar" />
             <div class="avatar-overlay">
               <i class="bi bi-camera"></i>
             </div>
@@ -81,14 +77,10 @@ endblock %} {% block content %}
       </div>
       {% else %}
       <div class="card shadow h-100">
-        <div
-          class="card-body text-center d-flex flex-column justify-content-center"
-        >
+        <div class="card-body text-center d-flex flex-column justify-content-center">
           <p class="lead">You haven't uploaded any reviews yet.</p>
           <p>Add some reviews to see your dining analytics.</p>
-          <a href="{{ url_for('upload_reviews') }}" class="btn btn-primary mt-2"
-            >Upload Reviews</a
-          >
+          <a href="{{ url_for('upload_reviews') }}" class="btn btn-primary mt-2">Upload Reviews</a>
         </div>
       </div>
       {% endif %}
@@ -101,10 +93,18 @@ endblock %} {% block content %}
       </div>
       <div class="card-body">
         <div class="text-center mb-3">
+          <select id="recipientUser" class="form-select mb-2" style="max-width: 300px; margin: 0 auto;">
+            <option value="">-- Select a user to share with --</option>
+            {% for u in all_users %}
+            <option value="{{ u.id }}">{{ u.name }}</option>
+            {% endfor %}
+          </select>
+
           <button id="shareButton" class="btn btn-outline-primary">
             Share Selected Reviews
           </button>
         </div>
+
         <div class="table-responsive">
           <table class="table table-hover review-table" id="reviewTable">
             <thead>
@@ -122,19 +122,13 @@ endblock %} {% block content %}
               {% for review in user.reviews %}
               <tr class="table-row-animate">
                 <td>
-                  <input
-                    type="checkbox"
-                    class="share-checkbox"
-                    value="{{ review.id }}"
-                  />
+                  <input type="checkbox" class="share-checkbox" value="{{ review.id }}" />
                 </td>
                 <td>{{ review.date }}</td>
                 <td class="fw-bold">{{ review.restaurant.name }}</td>
                 <td>{{ review.restaurant.location }}</td>
                 <td>
-                  <span
-                    class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}"
-                  >
+                  <span class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}">
                     {{ review.restaurant.cuisine }}
                   </span>
                 </td>
@@ -158,9 +152,7 @@ endblock %} {% block content %}
         <nav aria-label="Review pagination" class="mt-4">
           <ul class="pagination justify-content-center">
             <li class="page-item disabled">
-              <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-                >Previous</a
-              >
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
             </li>
             <li class="page-item active">
               <a class="page-link" href="#">1</a>
@@ -175,7 +167,7 @@ endblock %} {% block content %}
       </div>
     </div>
   </div>
-
+  
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -189,5 +181,5 @@ endblock %} {% block content %}
 
   <!-- Add reference to external JavaScript file -->
   <script src="/static/script.js"></script>
-  {% endblock %}
 </div>
+{% endblock %}

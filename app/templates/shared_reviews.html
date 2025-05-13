@@ -2,24 +2,38 @@
 {% block title %}Shared Reviews{% endblock %}
 {% block content %}
 <div class="container mt-4">
-  <h2 class="mb-4">📄 Shared Reviews</h2>
+  <h3 class="mb-4">Shared Reviews between {{ sender.name }} and {{ recipient.name }}</h3>
   {% if reviews %}
+  <ul class="list-group">
     {% for review in reviews %}
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ review.restaurant.name }}</h5>
-        <p class="card-text"><strong>Date:</strong> {{ review.date }}</p>
-        <p class="card-text"><strong>Location:</strong> {{ review.restaurant.location }}</p>
-        <p class="card-text"><strong>Cuisine:</strong> {{ review.restaurant.cuisine }}</p>
-        <p class="card-text"><strong>Rating:</strong> {{ review.rating }}/5</p>
-        <p class="card-text"><strong>Spend:</strong> ${{ "%.2f"|format(review.spend) }}</p>
-      </div>
-    </div>
+    <li class="list-group-item">
+      <strong>{{ review.restaurant.name }}</strong><br />
+      Rated: {{ review.rating }} ★ | Spent: ${{ "%.2f"|format(review.spend) }}<br />
+      Cuisine: {{ review.restaurant.cuisine }} | Date: {{ review.date }}
+    </li>
     {% endfor %}
+  </ul>
   {% else %}
-    <div class="alert alert-warning" role="alert">
-      No reviews found or invalid share link.
-    </div>
+  <p>No reviews found.</p>
   {% endif %}
+  <hr>
+<h5>Comments</h5>
+<ul class="list-group mb-3">
+  {% for comment in comments %}
+  <li class="list-group-item">
+    <strong>{{ comment.user.name }}</strong>:
+    {{ comment.content }}
+    <br><small class="text-muted">{{ comment.timestamp }}</small>
+  </li>
+  {% endfor %}
+</ul>
+
+<form method="POST">
+  <div class="mb-2">
+    <textarea name="comment" class="form-control" placeholder="Write a comment..." required></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Post Comment</button>
+</form>
+
 </div>
 {% endblock %}

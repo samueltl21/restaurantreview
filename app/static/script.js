@@ -218,25 +218,34 @@ document.addEventListener("DOMContentLoaded", function () {
     if (shareBtn) {
         shareBtn.addEventListener("click", () => {
             const selected = [];
-            document.querySelectorAll(".share-checkbox:checked").forEach((checkbox) => {
-                selected.push(checkbox.value);
+            document.querySelectorAll(".share-checkbox:checked").forEach(cb => {
+                selected.push(cb.value);
             });
 
+            const recipientId = document.getElementById("recipientUser").value;
+
             if (selected.length === 0) {
-                alert("Please select at least one review to share.");
+                alert("Please select at least one review.");
+                return;
+            }
+            if (!recipientId) {
+                alert("Please select a user to share with.");
                 return;
             }
 
-            fetch("/generate_share_link", {
+            fetch("/share_reviews", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ review_ids: selected })
+                body: JSON.stringify({ review_ids: selected, recipient_id: recipientId })
             })
-                .then(res => res.json())
-                .then(data => {
-                    const shareLink = window.location.origin + "/shared/" + data.token;
-                    showCopiedFeedback(shareLink);
-                });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.url;
+                } else {
+                    alert("Failed to share: " + data.message);
+                }
+            });
         });
     }
 });
