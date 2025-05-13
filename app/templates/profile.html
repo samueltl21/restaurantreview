@@ -24,25 +24,25 @@ endblock %} {% block content %}
           <div class="row mt-3 stats-row text-center">
             <div class="col-4">
               <div class="stat-circle reviews-circle">
-                {{ user.reviews|length }}
+                {{ current_user.reviews|length }}
               </div>
               <div class="stat-label">Reviews</div>
             </div>
             <div class="col-4">
-              {% set total_rating = 0 %} {% for review in user.reviews %} {% set
-              total_rating = total_rating + review.rating %} {% endfor %} {% if
-              user.reviews|length > 0 %} {% set avg_rating = (total_rating /
-              user.reviews|length) | round(1) %} {% else %} {% set avg_rating =
-              0 %} {% endif %}
+              {% set total_rating = 0 %} {% for review in current_user.reviews
+              %} {% set total_rating = total_rating + review.rating %} {% endfor
+              %} {% if current_user.reviews|length > 0 %} {% set avg_rating =
+              (total_rating / current_user.reviews|length) | round(1) %} {% else
+              %} {% set avg_rating = 0 %} {% endif %}
               <div class="stat-circle rating-circle">{{ avg_rating }}</div>
               <div class="stat-label">Avg Rating</div>
             </div>
             <div class="col-4">
-              {% set total_spend = 0 %} {% for review in user.reviews %} {% set
-              total_spend = total_spend + review.spend %} {% endfor %} {% if
-              user.reviews|length > 0 %} {% set avg_spend = (total_spend /
-              user.reviews|length) | round(1) %} {% else %} {% set avg_spend = 0
-              %} {% endif %}
+              {% set total_spend = 0 %} {% for review in current_user.reviews %}
+              {% set total_spend = total_spend + review.spend %} {% endfor %} {%
+              if current_user.reviews|length > 0 %} {% set avg_spend =
+              (total_spend / current_user.reviews|length) | round(1) %} {% else
+              %} {% set avg_spend = 0 %} {% endif %}
               <div class="stat-circle spend-circle">${{ avg_spend }}</div>
               <div class="stat-label">Avg Spend</div>
             </div>
@@ -51,128 +51,48 @@ endblock %} {% block content %}
       </div>
     </div>
 
-    <!--
-    Data Summary with Animation - Modified to match profile card height
-    <div class="col-md-8">
-      <div class="card preference-card shadow animate-slide-left h-100">
-        <div class="card-header bg-primary text-white">
-          <i class="bi bi-pie-chart-fill me-2"></i> Your Dining Preferences
+    <!-- Analytics Charts (Moved from analytics page) -->
+    <div class="col-md-8 mb-4">
+      {% if current_user.reviews|length > 0 %}
+      <div class="row">
+        <!-- Left Chart: Cuisine Preference -->
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Cuisine Preference</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="cuisineChart" height="300"></canvas>
+            </div>
+          </div>
         </div>
-        <div class="card-body d-flex flex-column justify-content-center">
-          <div class="row">
-            Most Frequent Category
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-box2-heart"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Most Eaten Category</h6>
-                  <p class="mb-0"><strong>Japanese</strong></p>
-                </div>
-              </div>
-            </div>
 
-            Highest Rated
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-trophy"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Highest Rated Restaurant</h6>
-                  <p class="mb-0">
-                    <strong>Bella Pasta</strong>
-                    <span class="rating-pill">4.9/5</span>
-                  </p>
-                </div>
-              </div>
+        <!-- Right Chart: Average Spend per Cuisine -->
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">Average Spend per Cuisine</h5>
             </div>
-
-            Favorite Restaurant
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-pin-map"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Favorite Restaurant</h6>
-                  <p class="mb-0">
-                    <strong>Tokyo Sushi Bar</strong>
-                    <span class="visit-badge">3 visits</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            Latest Dining
-            <div class="col-md-6 mb-3">
-              <div class="preference-item">
-                <div class="preference-icon">
-                  <i class="bi bi-calendar-check"></i>
-                </div>
-                <div class="preference-content">
-                  <h6>Latest Dining</h6>
-                  <p class="mb-0">
-                    <strong>Burger Town</strong>
-                    <span class="date-badge">Apr 20, 2025</span>
-                  </p>
-                </div>
-              </div>
+            <div class="card-body">
+              <canvas id="spendChart" height="300"></canvas>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Small Stats Cards -->
-    <!-- <div class="row mt-3">
-        <div class="col-md-4 mb-3">
-          <div class="card mini-stat-card shadow animate-pop">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-0">Total Spent</h6>
-                  <h3 class="mb-0">$160</h3>
-                </div>
-                <div class="mini-stat-icon">
-                  <i class="bi bi-cash-coin"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div class="card mini-stat-card shadow animate-pop delay-1">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-0">Cuisines</h6>
-                  <h3 class="mb-0">5</h3>
-                </div>
-                <div class="mini-stat-icon">
-                  <i class="bi bi-egg-fried"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div class="card mini-stat-card shadow animate-pop delay-2">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-0">Avg Rating</h6>
-                  <h3 class="mb-0">4.4</h3>
-                </div>
-                <div class="mini-stat-icon">
-                  <i class="bi bi-star-half"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+      {% else %}
+      <div class="card shadow h-100">
+        <div
+          class="card-body text-center d-flex flex-column justify-content-center"
+        >
+          <p class="lead">You haven't uploaded any reviews yet.</p>
+          <p>Add some reviews to see your dining analytics.</p>
+          <a href="{{ url_for('upload_reviews') }}" class="btn btn-primary mt-2"
+            >Upload Reviews</a
+          >
         </div>
       </div>
-    </div> -->
+      {% endif %}
+    </div>
 
     <!-- Reviews Table Card with Animation -->
     <div class="card review-card shadow mb-4 animate-fade-up">
@@ -255,6 +175,17 @@ endblock %} {% block content %}
       </div>
     </div>
   </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Pass dynamic data to JS -->
+  <script>
+    const cuisineLabels = {{ cuisine_labels | tojson | safe }};
+    const cuisineValues = {{ cuisine_values | tojson | safe }};
+    const spendLabels = {{ avg_spend_labels | tojson | safe }};
+    const spendValues = {{ avg_spend_values | tojson | safe }};
+  </script>
 
   <!-- Add reference to external JavaScript file -->
   <script src="/static/script.js"></script>
