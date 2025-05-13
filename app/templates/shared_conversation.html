@@ -4,27 +4,20 @@
 <div class="container mt-4">
   <h3>Shared Reviews with {{ other_user.name }}</h3>
 
-  {% if reviews %}
-  <ul class="list-group mb-3">
-    {% for review in reviews %}
-    <li class="list-group-item">
-      <strong>{{ review.restaurant.name }}</strong><br>
-      {{ review.rating }} ★ on {{ review.date }} – ${{ "%.2f"|format(review.spend) }}
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>No shared reviews yet.</p>
-  {% endif %}
-
-  <hr>
-  <h5>Comments</h5>
-  <ul class="list-group mb-3">
-    {% for comment in comments %}
-    <li class="list-group-item">
-      <strong>{{ comment.user.name }}</strong>: {{ comment.content }}
-      <br><small class="text-muted">{{ comment.timestamp }}</small>
-    </li>
+  <ul class="list-group mb-4">
+    {% for item in items %}
+      {% if item.type == "review" %}
+        <li class="list-group-item">
+          <strong>{{ item.sender.name }}</strong> shared a review:<br>
+          🍽️ <strong>{{ item.data.restaurant.name }}</strong><br>
+          ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}
+        </li>
+      {% elif item.type == "comment" %}
+        <li class="list-group-item">
+          💬 <strong>{{ item.sender.name }}</strong>: {{ item.data.content }}<br>
+          <small class="text-muted">{{ item.data.timestamp }}</small>
+        </li>
+      {% endif %}
     {% endfor %}
   </ul>
 
