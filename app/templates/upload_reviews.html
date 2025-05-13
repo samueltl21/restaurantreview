@@ -27,7 +27,7 @@ endblock %} {% block content %}
     <!-- Rate Restaurant Form (Right) -->
     <div class="col-md-6">
       <h3>Rate a Restaurant</h3>
-      <form method="POST" id="review-form">
+      <form method="POST" id="review-form" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
       
         <!-- Restaurant Name (Always visible) -->
@@ -67,8 +67,9 @@ endblock %} {% block content %}
           <div class="mb-3">
             {{ form.review_image.label }}
             {{ form.review_image(class="form-control") }}
-          <div class="form-text text-muted">Optional: Upload a photo of the dish or restaurant.
-          </div>     
+            <div class="form-text text-muted">Optional: Upload a photo of the dish or restaurant.
+            </div>     
+          </div> 
           <div class="mb-3">
             {{ form.comment.label }}<br>
             {{ form.comment(class="form-control", rows=3) }}
