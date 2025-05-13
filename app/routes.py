@@ -355,7 +355,7 @@ def view_shared_conversation(user_id):
         content = request.form.get("comment", "").strip()
         if content and shared_threads:
             comment = SharedComment(
-                shared_review_id=shared_threads[0].id,  # Use first thread ID
+                shared_review_id=shared_threads[0].id,
                 user_id=current_user.id,
                 content=content,
                 timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -380,3 +380,4 @@ def shared_with():
 
     users = User.query.filter(User.id.in_(user_ids)).all()
     return render_template("shared_with.html", shared_users=users)
+
