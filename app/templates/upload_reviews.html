@@ -65,6 +65,11 @@ endblock %} {% block content %}
             {{ form.spend(class="form-control") }}
           </div>
           <div class="mb-3">
+            {{ form.review_image.label }}
+            {{ form.review_image(class="form-control") }}
+          <div class="form-text text-muted">Optional: Upload a photo of the dish or restaurant.
+          </div>     
+          <div class="mb-3">
             {{ form.comment.label }}<br>
             {{ form.comment(class="form-control", rows=3) }}
           </div>          
