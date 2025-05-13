@@ -2,42 +2,25 @@
 endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <!-- Upload CSV Form (Left)
-    <div class="col-md-6">
-      <h3>Upload Ratings (CSV)</h3>
-
-      <!-- <div class="alert alert-info" role="alert">
-        <strong>CSV Format:</strong> Make sure your file follows this format:
-        <pre class="mt-2 mb-0">
-          email,restaurant_name,rating,date,spend,location,cuisine
-          your@email.com,Golden Spoon,5,2024-10-10,45.00,123 Main St,Italian
-          your@email.com,Ocean Delight,4,2024-10-12,30.50,456 Beach Rd,Seafood
-      </pre>
-      </div>
-
-      <form method="POST" action="{{ url_for('upload_reviews') }}" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label for="csv_file" class="form-label">Choose a CSV file:</label>
-          <input class="form-control" type="file" id="csv_file" name="csv_file" accept=".csv" required />
-        </div>
-        <button type="submit" class="btn btn-primary">Upload</button>
-      </form>
-    </div> -->
 
     <!-- Rate Restaurant Form (Right) -->
     <div class="col-md-6">
       <h3>Rate a Restaurant</h3>
       <form method="POST" id="review-form">
         {{ form.hidden_tag() }}
-      
+
         <!-- Restaurant Name (Always visible) -->
         <div class="mb-3 position-relative">
-          {{ form.restaurant.label }}<br>
+          {{ form.restaurant.label }}
           {{ form.restaurant(class="form-control", id="restaurant-name", autocomplete="off") }}
+          <div class="form-text text-muted">
+            It will automatically check if the restaurant already exists in the database or not.
+          </div>
           <div id="restaurant-suggestions" class="list-group position-absolute w-100" style="z-index:1050;"></div>
           <div id="restaurant-check-result" class="form-text mt-1"></div>
         </div>
-      
+
+
         <!-- These will appear only if restaurant is NOT found -->
         <div id="restaurant-info-section" style="display: none;">
           <div class="mb-3">
@@ -49,7 +32,7 @@ endblock %} {% block content %}
             {{ form.cuisine(class="form-select", id="cuisine") }}
           </div>
         </div>
-      
+
         <!-- Review fields (appear after checking name) -->
         <div id="review-fields-section" style="display: none;">
           <div class="mb-3">
@@ -67,12 +50,13 @@ endblock %} {% block content %}
           <div class="mb-3">
             {{ form.comment.label }}<br>
             {{ form.comment(class="form-control", rows=3) }}
-          </div>          
+          </div>
           <div class="center-container">
             {{ form.submit(class="btn btn-success") }}
           </div>
         </div>
-      </form>      
+      </form>
     </div>
   </div>
-  {% endblock %}
+</div>
+{% endblock %}

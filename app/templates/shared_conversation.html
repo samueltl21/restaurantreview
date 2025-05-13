@@ -2,30 +2,34 @@
 {% block title %}Conversation with {{ other_user.name }}{% endblock %}
 {% block content %}
 <div class="container mt-4">
-  <h3>Shared Reviews with {{ other_user.name }}</h3>
+  <h3 class="text-center mb-4">Shared Reviews with {{ other_user.name }}</h3>
 
-  <ul class="list-group mb-4">
-    {% for item in items %}
-      {% if item.type == "review" %}
-        <li class="list-group-item">
-          <strong>{{ item.sender.name }}</strong> shared a review:<br>
-          🍽️ <strong>{{ item.data.restaurant.name }}</strong><br>
-          ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}
-        </li>
-      {% elif item.type == "comment" %}
-        <li class="list-group-item">
-          💬 <strong>{{ item.sender.name }}</strong>: {{ item.data.content }}<br>
-          <small class="text-muted">{{ item.data.timestamp }}</small>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <ul class="list-group mb-4">
+        {% for item in items %}
+          {% if item.type == "review" %}
+            <li class="list-group-item">
+              <strong>{{ item.sender.name }}</strong> shared a review:<br>
+              🍽️ <strong>{{ item.data.restaurant.name }}</strong><br>
+              ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}
+            </li>
+          {% elif item.type == "comment" %}
+            <li class="list-group-item">
+              💬 <strong>{{ item.sender.name }}</strong>: {{ item.data.content }}<br>
+              <small class="text-muted">{{ item.data.timestamp }}</small>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
 
-  <form method="POST">
-    <div class="mb-2">
-      <textarea name="comment" class="form-control" placeholder="Write a comment..." required></textarea>
+      <form method="POST">
+        <div class="mb-2">
+          <textarea name="comment" class="form-control" placeholder="Write a comment..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Post Comment</button>
+      </form>
     </div>
-    <button type="submit" class="btn btn-primary">Post Comment</button>
-  </form>
+  </div>
 </div>
 {% endblock %}
