@@ -1,8 +1,6 @@
-{% extends "base.html" %}
-{% block title %}My Profile | RestaurantReview{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}My Profile | RestaurantReview{%
+endblock %} {% block content %}
 <div class="container mt-4">
-
   <div class="row justify-content-center">
     <div class="col-md-4 mb-4">
       <div class="card profile-card shadow animate-slide-right">
@@ -17,96 +15,179 @@
               <i class="bi bi-camera"></i>
             </div>
           </div>
-          <h4 class="card-title fancy-title">Example</h4>
+          <!-- Username with animated underline -->
+          <h4 class="card-title fancy-title">{{ current_user.name }}</h4>
+          <!-- Email -->
           <p class="text-muted">
-            <i class="bi bi-envelope-fill me-1"></i>test@example.com
+            <i class="bi bi-envelope-fill me-1"></i>{{ current_user.email }}
           </p>
           <div class="row mt-3 stats-row text-center">
             <div class="col-4">
-              <div class="stat-circle">5</div>
+              <div class="stat-circle reviews-circle">
+                {{ current_user.reviews|length }}
+              </div>
               <div class="stat-label">Reviews</div>
             </div>
             <div class="col-4">
-              <div class="stat-circle">4.4</div>
-              <div class="stat-label">Avg</div>
+              {% set total_rating = 0 %} {% for review in current_user.reviews
+              %} {% set total_rating = total_rating + review.rating %} {% endfor
+              %} {% if current_user.reviews|length > 0 %} {% set avg_rating =
+              (total_rating / current_user.reviews|length) | round(1) %} {% else
+              %} {% set avg_rating = 0 %} {% endif %}
+              <div class="stat-circle rating-circle">{{ avg_rating }}</div>
+              <div class="stat-label">Avg Rating</div>
             </div>
             <div class="col-4">
-              <div class="stat-circle">5</div>
-              <div class="stat-label">Places</div>
+              {% set total_spend = 0 %} {% for review in current_user.reviews %}
+              {% set total_spend = total_spend + review.spend %} {% endfor %} {%
+              if current_user.reviews|length > 0 %} {% set avg_spend =
+              (total_spend / current_user.reviews|length) | round(1) %} {% else
+              %} {% set avg_spend = 0 %} {% endif %}
+              <div class="stat-circle spend-circle">${{ avg_spend }}</div>
+              <div class="stat-label">Avg Spend</div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Analytics Charts (Moved from analytics page) -->
+    <div class="col-md-8 mb-4">
+      {% if current_user.reviews|length > 0 %}
+      <div class="row">
+        <!-- Left Chart: Cuisine Preference -->
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Cuisine Preference</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="cuisineChart" height="300"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Chart: Average Spend per Cuisine -->
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">Average Spend per Cuisine</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="spendChart" height="300"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="card shadow h-100">
+        <div
+          class="card-body text-center d-flex flex-column justify-content-center"
+        >
+          <p class="lead">You haven't uploaded any reviews yet.</p>
+          <p>Add some reviews to see your dining analytics.</p>
+          <a href="{{ url_for('upload_reviews') }}" class="btn btn-primary mt-2"
+            >Upload Reviews</a
+          >
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Reviews Table Card with Animation -->
+    <div class="card review-card shadow mb-4 animate-fade-up">
+      <div class="card-header bg-primary text-white">
+        <i class="bi bi-journal-richtext me-2"></i> Your Restaurant Reviews
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-3">
+          <button id="shareButton" class="btn btn-outline-primary">
+            Share Selected Reviews
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover review-table" id="reviewTable">
+            <thead>
+              <tr>
+                <th>Share</th>
+                <th>Date</th>
+                <th>Restaurant</th>
+                <th>Location</th>
+                <th>Cuisine</th>
+                <th>Rating</th>
+                <th>Spend</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for review in user.reviews %}
+              <tr class="table-row-animate">
+                <td>
+                  <input
+                    type="checkbox"
+                    class="share-checkbox"
+                    value="{{ review.id }}"
+                  />
+                </td>
+                <td>{{ review.date }}</td>
+                <td class="fw-bold">{{ review.restaurant.name }}</td>
+                <td>{{ review.restaurant.location }}</td>
+                <td>
+                  <span
+                    class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}"
+                  >
+                    {{ review.restaurant.cuisine }}
+                  </span>
+                </td>
+                <td>
+                  <div class="star-rating">
+                    {% for i in range(review.rating) %}
+                    <span class="star filled">★</span>
+                    {% endfor %} {% for i in range(5 - review.rating) %}
+                    <span class="star">★</span>
+                    {% endfor %}
+                  </div>
+                </td>
+                <td>${{ "%.2f"|format(review.spend) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Review pagination" class="mt-4">
+          <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+                >Previous</a
+              >
+            </li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </div>
 
-  <!-- Reviews Table Card with Animation -->
-  <div class="card review-card shadow mb-4 animate-fade-up">
-    <div class="card-header bg-primary text-white">
-      <i class="bi bi-journal-richtext me-2"></i> Your Restaurant Reviews
-    </div>
-    <div class="card-body">
-      <div class="text-center mb-3">
-        <button id="shareButton" class="btn btn-outline-primary">Share Selected Reviews</button>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-hover review-table" id="reviewTable">
-          <thead>
-            <tr>
-              <th>Share</th>
-              <th>Date</th>
-              <th>Restaurant</th>
-              <th>Location</th>
-              <th>Cuisine</th>
-              <th>Rating</th>
-              <th>Spend</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for review in user.reviews %}
-            <tr class="table-row-animate">
-              <td><input type="checkbox" class="share-checkbox" value="{{ review.id }}"></td>
-              <td>{{ review.date }}</td>
-              <td class="fw-bold">{{ review.restaurant.name }}</td>
-              <td>{{ review.restaurant.location }}</td>
-              <td>
-                <span class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}">
-                  {{ review.restaurant.cuisine }}
-                </span>
-              </td>
-              <td>
-                <div class="star-rating">
-                  {% for i in range(review.rating) %}
-                  <span class="star filled">★</span>
-                  {% endfor %}
-                  {% for i in range(5 - review.rating) %}
-                  <span class="star">★</span>
-                  {% endfor %}
-                </div>
-              </td>
-              <td>${{ "%.2f"|format(review.spend) }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-      <nav aria-label="Review pagination" class="mt-4">
-        <ul class="pagination justify-content-center">
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-          </li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
+  <!-- Pass dynamic data to JS -->
+  <script>
+    const cuisineLabels = {{ cuisine_labels | tojson | safe }};
+    const cuisineValues = {{ cuisine_values | tojson | safe }};
+    const spendLabels = {{ avg_spend_labels | tojson | safe }};
+    const spendValues = {{ avg_spend_values | tojson | safe }};
+  </script>
+
+  <!-- Add reference to external JavaScript file -->
+  <script src="/static/script.js"></script>
+  {% endblock %}
 </div>
-
-<script src="/static/script.js"></script>
-{% endblock %}
