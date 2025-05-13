@@ -25,21 +25,23 @@ endblock %} {% block content %}
               <div class="stat-label">Reviews</div>
             </div>
             <div class="col-4">
-              {% set total_rating = 0 %} {% for review in current_user.reviews
-              %} {% set total_rating = total_rating + review.rating %} {% endfor
-              %} {% if current_user.reviews|length > 0 %} {% set avg_rating =
-              (total_rating / current_user.reviews|length) | round(1) %} {% else
-              %} {% set avg_rating = 0 %} {% endif %}
-              <div class="stat-circle rating-circle">{{ avg_rating }}</div>
+              <div class="stat-circle rating-circle">
+                {% if avg_rating is defined %}
+                {{ "%.1f"|format(avg_rating) }}
+                {% else %}
+                N/A
+                {% endif %}
+              </div>
               <div class="stat-label">Avg Rating</div>
             </div>
             <div class="col-4">
-              {% set total_spend = 0 %} {% for review in current_user.reviews %}
-              {% set total_spend = total_spend + review.spend %} {% endfor %} {%
-              if current_user.reviews|length > 0 %} {% set avg_spend =
-              (total_spend / current_user.reviews|length) | round(1) %} {% else
-              %} {% set avg_spend = 0 %} {% endif %}
-              <div class="stat-circle spend-circle">${{ avg_spend }}</div>
+              <div class="stat-circle spend-circle">
+                {% if avg_spend is defined %}
+                ${{ "%.2f"|format(avg_spend) }}
+                {% else %}
+                $0.00
+                {% endif %}
+              </div>
               <div class="stat-label">Avg Spend</div>
             </div>
           </div>
@@ -167,7 +169,7 @@ endblock %} {% block content %}
       </div>
     </div>
   </div>
-  
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
