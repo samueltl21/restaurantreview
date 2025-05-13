@@ -216,3 +216,11 @@ def upload_restaurant_image(restaurant_id):
 
         flash('Image uploaded successfully!', 'success')
         return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+
+
+@application.route('/share_review/<int:review_id>')
+def share_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    restaurant = Restaurant.query.get_or_404(review.restaurant_id)
+    user = User.query.get_or_404(review.user_id)
+    return render_template('shared_reviews.html', review=review, restaurant=restaurant, user=user)

@@ -3,17 +3,23 @@
 {% block content %}
 <div class="container mt-4">
   <h2 class="mb-4">📄 Shared Reviews</h2>
-  {% for review in reviews %}
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">{{ review.restaurant.name }}</h5>
-      <p class="card-text"><strong>Date:</strong> {{ review.date }}</p>
-      <p class="card-text"><strong>Location:</strong> {{ review.restaurant.location }}</p>
-      <p class="card-text"><strong>Cuisine:</strong> {{ review.restaurant.cuisine }}</p>
-      <p class="card-text"><strong>Rating:</strong> {{ review.rating }}/5</p>
-      <p class="card-text"><strong>Spend:</strong> ${{ "%.2f"|format(review.spend) }}</p>
+  {% if reviews %}
+    {% for review in reviews %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ review.restaurant.name }}</h5>
+        <p class="card-text"><strong>Date:</strong> {{ review.date }}</p>
+        <p class="card-text"><strong>Location:</strong> {{ review.restaurant.location }}</p>
+        <p class="card-text"><strong>Cuisine:</strong> {{ review.restaurant.cuisine }}</p>
+        <p class="card-text"><strong>Rating:</strong> {{ review.rating }}/5</p>
+        <p class="card-text"><strong>Spend:</strong> ${{ "%.2f"|format(review.spend) }}</p>
+      </div>
     </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      No reviews found or invalid share link.
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
