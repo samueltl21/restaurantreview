@@ -36,6 +36,7 @@ class Review(db.Model):
     rating: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
     spend: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
     comment: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
+    image: so.Mapped[Optional[str]] = so.mapped_column(sa.String(255), nullable=True)  
 
 
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
