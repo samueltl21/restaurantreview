@@ -323,6 +323,8 @@ def share_reviews():
         db.session.add(shared)
         db.session.flush()  # Get shared.id
 
+        review_ids = list(set(review_ids))
+
         for review_id in review_ids:
             entry = SharedReviewEntry(
                 shared_review_id=shared.id,
@@ -356,7 +358,7 @@ def view_shared_reviews(token):
             db.session.commit()
             return redirect(url_for("view_shared_reviews", token=token))
 
-    review_ids = json.loads(shared.review_ids)
+    review_ids = list(set(json.loads(shared.review_ids)))  # Deduplicate
     reviews = Review.query.filter(Review.id.in_(review_ids)).all()
     sender = User.query.get(shared.sender_id)
     recipient = User.query.get(shared.recipient_id)
@@ -396,14 +398,18 @@ def view_shared_conversation(user_id):
     )
 
     timeline = []
+    seen_review_ids = set()
 
+    # Deduplicate reviews
     for entry, review, thread, sender in entry_data:
-        timeline.append({
-            "type": "review",
-            "timestamp": entry.shared_at,
-            "data": review,
-            "sender": sender
-        })
+        if review.id not in seen_review_ids:
+            timeline.append({
+                "type": "review",
+                "timestamp": entry.shared_at,
+                "data": review,
+                "sender": sender
+            })
+            seen_review_ids.add(review.id)
 
     # Get all comments on those threads
     comments = SharedComment.query.filter(
@@ -425,7 +431,6 @@ def view_shared_conversation(user_id):
     if request.method == "POST":
         content = request.form.get("comment", "").strip()
         if content:
-            # Assign the comment to the first thread
             comment = SharedComment(
                 shared_review_id=shared_threads[0].id,
                 user_id=current_user.id,
@@ -437,6 +442,7 @@ def view_shared_conversation(user_id):
             return redirect(url_for("view_shared_conversation", user_id=other_user.id))
 
     return render_template("shared_conversation.html", other_user=other_user, items=timeline)
+
 
 @application.route('/shared_with')
 @login_required
