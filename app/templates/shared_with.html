@@ -7,14 +7,20 @@
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
       <ul class="list-group">
-        {% for user in shared_users %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          {{ user.name }}
-          <a href="{{ url_for('view_shared_conversation', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
-            View Conversation
-          </a>
-        </li>
-        {% endfor %}
+        {% if has_shared_users %}
+          {% for user in shared_users %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ user.name }}
+            <a href="{{ url_for('view_shared_conversation', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
+              View Conversation
+            </a>
+          </li>
+          {% endfor %}
+        {% else %}
+          <li class="list-group-item text-center">
+            You haven't shared anything with another user yet.
+          </li>
+        {% endif %}
       </ul>
     </div>
   </div>

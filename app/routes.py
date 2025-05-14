@@ -457,6 +457,9 @@ def shared_with():
         user_ids.add(thread.sender_id if thread.sender_id != current_user.id else thread.recipient_id)
 
     users = User.query.filter(User.id.in_(user_ids)).all()
+    
+    has_shared_users = len(users) > 0
+    
     return render_template("shared_with.html", shared_users=users)
 
 @application.route('/search_users', methods=['GET'])
