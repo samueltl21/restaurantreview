@@ -9,11 +9,16 @@
       <ul class="list-group mb-4">
         {% for item in items %}
           {% if item.type == "review" %}
-            <li class="list-group-item">
-              <strong>{{ item.sender.name }}</strong> shared a review:<br>
-              🍽️ <strong>{{ item.data.restaurant.name }}</strong><br>
-              ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}
-            </li>
+          <li class="list-group-item">
+            <strong>{{ item.sender.name }}</strong> shared a review:<br>
+            🍽️ <a href="{{ url_for('restaurant_detail', restaurant_id=item.data.restaurant.id) }}">
+              <strong>{{ item.data.restaurant.name }}</strong>
+            </a><br>
+            ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}<br>
+            {% if item.data.comment %}
+              📝 <em>{{ item.data.comment }}</em>
+            {% endif %}
+          </li>                    
           {% elif item.type == "comment" %}
             <li class="list-group-item">
               💬 <strong>{{ item.sender.name }}</strong>: {{ item.data.content }}<br>
