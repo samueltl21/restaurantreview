@@ -29,7 +29,7 @@
         <img src="{{ url_for('static', filename='images/' ~ restaurant.image) }}" alt="{{ restaurant.name }}">
         {% endif %}
         <p class="mt-2 mb-0"><strong>{{ restaurant.name }}</strong></p>
-        <p class="caption">{{ avg_rating }} ⭐ average</p>
+        <p class="caption">{{ "%.1f"|format(avg_rating) }} ⭐ average</p>
       </div>
     </a>
     {% endfor %}
@@ -46,8 +46,8 @@
       <div class="restaurant-item-custom">
         {{ r.name }}<br />
         <span class="stars">
-          {{ "⭐" * rating|int }} {% if rating > 0 %}({{ rating }}){% endif %}
-        </span>
+          {{ "⭐" * rating|int }} {% if rating > 0 %}({{ "%.1f"|format(rating) }}){% endif %}
+        </span>        
       </div>
     </a>
     {% endfor %}
