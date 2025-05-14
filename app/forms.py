@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, DecimalField, SelectField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange
+from wtforms import StringField, PasswordField, SubmitField, DateField, DecimalField, SelectField, TextAreaField, FileField
+from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange, Optional
+from flask_wtf.file import FileAllowed
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(), Length(max=50)])
@@ -33,5 +34,6 @@ class ReviewForm(FlaskForm):
         ('4', '4 - Very Good'), ('5', '5 - Excellent')
     ], validators=[DataRequired()])
     spend = DecimalField('Amount Spent ($)', validators=[DataRequired(), NumberRange(min=0)], places=2)
+    review_image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     comment = TextAreaField('Comment')
     submit = SubmitField('Submit Rating')
