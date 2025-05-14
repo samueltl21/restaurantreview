@@ -475,3 +475,37 @@ def search_users():
     ).limit(10).all()
 
     return jsonify([{"id": u.id, "name": u.name} for u in matches])
+
+from datetime import datetime
+
+@application.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
+@login_required
+def edit_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    if review.user_id != current_user.id:
+        flash("You are not authorized to edit this review.", "danger")
+        return redirect(url_for("profile"))
+
+    try:
+        review_date = datetime.strptime(review.date, '%Y-%m-%d').date()
+    except Exception:
+        flash("Invalid date format in database.", "danger")
+        return redirect(url_for("profile"))
+
+    form = ReviewForm(obj=review)
+    form.date.data = review_date
+
+    if form.validate_on_submit():
+        review.rating = int(form.rating.data)
+        review.date = form.date.data.strftime('%Y-%m-%d')
+        review.spend = float(form.spend.data)
+
+        review.restaurant.name = form.restaurant.data.strip()
+        review.restaurant.location = form.location.data.strip()
+        review.restaurant.cuisine = form.cuisine.data.strip()
+
+        db.session.commit()
+        flash("Review updated successfully!", "success")
+        return redirect(url_for("profile"))
+
+    return render_template("edit_review.html", form=form, review=review)
