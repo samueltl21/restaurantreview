@@ -155,6 +155,17 @@ def upload_reviews():
         rating = int(form.rating.data)
         date = form.date.data.strftime('%Y-%m-%d')
         spend = float(form.spend.data)
+        comment = form.comment.data.strip()
+        image_filename = None
+
+        # Handle image upload
+        if 'review_image' in request.files:
+            image = request.files['review_image']
+            if image and image.filename != '':
+                filename = secure_filename(image.filename)
+                image_path = os.path.join('app/static/uploads', filename)
+                image.save(image_path)
+                image_filename = filename  # Save the filename
 
         # Check if restaurant exists
 
