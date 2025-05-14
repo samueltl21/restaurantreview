@@ -130,7 +130,11 @@ endblock %} {% block content %}
                   <input type="checkbox" class="share-checkbox" value="{{ review.id }}" />
                 </td>
                 <td>{{ review.date }}</td>
-                <td class="fw-bold">{{ review.restaurant.name }}</td>
+                <td class="fw-bold">
+                  <a href="{{ url_for('restaurant_detail', restaurant_id=review.restaurant.id) }}" class="text-decoration-none">
+                    {{ review.restaurant.name }}
+                  </a>
+                </td>                
                 <td>{{ review.restaurant.location }}</td>
                 <td>
                   <span class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}">
