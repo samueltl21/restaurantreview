@@ -101,6 +101,21 @@ def profile():
         all_users=all_users
     )
 
+@application.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid email or password!', 'danger')
+    return render_template('login.html', form=form)
 
 @application.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
