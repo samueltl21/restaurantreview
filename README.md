@@ -22,5 +22,24 @@ application-env\Scripts\activate
 5. Install all required dependancies from requirements.txt:
 pip install -r requirements.txt 
 
-6. Run the Flask app:
+6. Load seed.py data
+python3 seed.py
+
+7. Run the Flask app:
 flask run
+
+=====
+Testing purposes:
+Do all steps until step 6,
+Then:
+a. Run the unittest: 
+python3 -m tests.test_auth
+
+=====
+Testing with selenium:
+Do all steps until step 7,
+Then open another terminal/command line while another terminal run the "flask run"
+
+After that, run selenium test:
+python3 -m unittest tests.test_selenium_sharing_review
+** the browser will play the test scenario

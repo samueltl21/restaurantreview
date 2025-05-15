@@ -81,3 +81,6 @@ class AuthTestCase(unittest.TestCase):
 
         response = self.client.get('/profile', follow_redirects=True)
         self.assertIn(b'Please log in to access this page', response.data)
+
+if __name__ == '__main__':
+    unittest.main()
