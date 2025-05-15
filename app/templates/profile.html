@@ -153,8 +153,13 @@
                 </td>
                 <td>${{ "%.2f"|format(review.spend) }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-secondary edit-review-btn" data-review-id="{{ review.id }}"
-                    data-date="{{ review.date }}" data-rating="{{ review.rating }}" data-spend="{{ review.spend }}">
+                  <button class="btn btn-sm btn-outline-secondary edit-review-btn"
+                    data-review-id="{{ review.id }}"
+                    data-date="{{ review.date }}"
+                    data-rating="{{ review.rating }}"
+                    data-spend="{{ review.spend }}"
+                    data-comment="{{ review.comment|e }}"
+                    data-image="{{ url_for('static', filename='images/' ~ review.image) if review.image else '' }}">
                     Edit
                   </button>
                 </td>
@@ -195,39 +200,62 @@
     const spendValues = {{ avg_spend_values | tojson | safe }};
   </script>
 
-  <div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="editReviewLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="editReviewForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editReviewLabel">Edit Review</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="review_id" id="edit-review-id" />
+  <!-- Edit Review Modal -->
+<div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="editReviewLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- ⚠️ enctype added to support image upload -->
+      <form id="editReviewForm" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editReviewLabel">Edit Review</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
-            <div class="mb-3">
-              <label for="edit-rating" class="form-label">Rating</label>
-              <input type="number" class="form-control" id="edit-rating" name="rating" min="1" max="5" required />
-            </div>
+        <div class="modal-body">
+          <input type="hidden" name="review_id" id="edit-review-id" />
 
-            <div class="mb-3">
-              <label for="edit-spend" class="form-label">Spend</label>
-              <input type="number" class="form-control" id="edit-spend" name="spend" step="0.01" required />
-            </div>
+          <div class="mb-3">
+            <label for="edit-rating" class="form-label">Rating</label>
+            <input type="number" class="form-control" id="edit-rating" name="rating" min="1" max="5" required />
+          </div>
 
-            <div class="mb-3">
-              <label for="edit-date" class="form-label">Date</label>
-              <input type="date" class="form-control" id="edit-date" name="date" required />
+          <div class="mb-3">
+            <label for="edit-spend" class="form-label">Spend</label>
+            <input type="number" class="form-control" id="edit-spend" name="spend" step="0.01" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="edit-date" name="date" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-comment" class="form-label">Comment</label>
+            <textarea class="form-control" id="edit-comment" name="comment" rows="3"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-image" class="form-label">Update Image</label>
+            <input type="file" class="form-control" id="edit-image" name="review_image" accept="image/*" />
+          </div>
+
+          <div id="existing-image-preview" class="mb-3" style="display: none;">
+            <p>Current Image:</p>
+            <img id="current-review-image" src="" class="img-thumbnail" style="max-height: 150px;">
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="checkbox" name="delete_image" id="delete-image-checkbox">
+              <label class="form-check-label" for="delete-image-checkbox">Delete current image</label>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-          </div>
-        </form>
-      </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
 </div>
 {% endblock %}

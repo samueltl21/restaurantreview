@@ -363,11 +363,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const rating = button.dataset.rating;
         const spend = button.dataset.spend;
         const date = button.dataset.date;
+        const comment = button.dataset.comment || "";
+        const imageUrl = button.dataset.image;
   
         document.getElementById("edit-review-id").value = reviewId;
         document.getElementById("edit-rating").value = rating;
         document.getElementById("edit-spend").value = spend;
         document.getElementById("edit-date").value = date;
+        document.getElementById("edit-comment").value = comment;
+  
+        const previewContainer = document.getElementById("existing-image-preview");
+        const previewImg = document.getElementById("current-review-image");
+  
+        if (imageUrl) {
+          previewImg.src = imageUrl;
+          previewContainer.style.display = "block";
+        } else {
+          previewImg.src = "";
+          previewContainer.style.display = "none";
+        }
   
         modal.show();
       });
@@ -376,29 +390,27 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("editReviewForm").addEventListener("submit", function (e) {
       e.preventDefault();
   
+      const form = e.target;
       const reviewId = document.getElementById("edit-review-id").value;
-      const payload = {
-        rating: document.getElementById("edit-rating").value,
-        spend: document.getElementById("edit-spend").value,
-        date: document.getElementById("edit-date").value,
-      };
+      const formData = new FormData(form);
   
       fetch(`/api/review/${reviewId}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: formData
       })
         .then(res => res.json())
         .then(data => {
           if (data.success) {
             alert("Review updated successfully!");
-            location.reload(); // Later we can improve this by updating DOM directly
+            location.reload();
           } else {
             alert("Error: " + (data.error || "Failed to update review."));
           }
+        })
+        .catch(err => {
+          alert("Request failed.");
+          console.error(err);
         });
     });
-  });
+  });  
   

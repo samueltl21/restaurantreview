@@ -186,6 +186,18 @@ def upload_reviews():
             user_id=current_user.id,
             restaurant_id=restaurant.id
         )
+
+        # Handle image upload
+        file = form.review_image.data
+        if file:
+            filename = secure_filename(file.filename)
+            path = os.path.join("app/static/images", filename)
+            file.save(path)
+            review.image = filename
+
+        # Add comment
+        review.comment = form.comment.data
+
         db.session.add(review)
         db.session.commit()
         flash("Thanks for your review!", "success")
@@ -460,7 +472,7 @@ def shared_with():
     
     has_shared_users = len(users) > 0
     
-    return render_template("shared_with.html", shared_users=users)
+    return render_template("shared_with.html", shared_users=users, has_shared_users=len(users) > 0)
 
 @application.route('/search_users', methods=['GET'])
 @login_required
@@ -485,10 +497,25 @@ def api_update_review(review_id):
     if review.user_id != current_user.id:
         return jsonify({"success": False, "error": "Unauthorized"}), 403
 
-    data = request.get_json()
-    review.rating = int(data.get("rating"))
-    review.spend = float(data.get("spend"))
-    review.date = data.get("date")
+    # Use form instead of JSON for multipart support
+    review.rating = int(request.form.get("rating", review.rating))
+    review.spend = float(request.form.get("spend", review.spend))
+    review.date = request.form.get("date", review.date)
+    review.comment = request.form.get("comment", review.comment)
+
+    # Handle image upload
+    if "review_image" in request.files:
+        file = request.files["review_image"]
+        if file and file.filename != "":
+            filename = secure_filename(file.filename)
+            path = os.path.join("app/static/images", filename)
+            file.save(path)
+            review.image = filename
+
+    # Handle image deletion
+    if request.form.get("delete_image") == "on":
+        review.image = None
 
     db.session.commit()
     return jsonify({"success": True})
+

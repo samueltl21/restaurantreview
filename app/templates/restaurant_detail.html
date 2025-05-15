@@ -32,11 +32,16 @@
             {% for review in reviews %}
             <div class="card mb-2">
                 <div class="card-body">
+                    <p><strong>User:</strong> {{ review.user.name }}</p>
                     <p><strong>Rating:</strong> {{ review.rating }} ⭐</p>
                     <p><strong>Spend:</strong> ${{ review.spend }}</p>
                     <p><strong>Date:</strong> {{ review.date }}</p>
                     {% if review.comment %}
                     <p><strong>Comment:</strong> {{ review.comment }}</p>
+                    {% endif %}
+                    {% if review.image %}
+                    <img src="{{ url_for('static', filename='images/' ~ review.image) }}" alt="Review image"
+                        class="img-fluid mb-2" style="max-height: 200px;">
                     {% endif %}
                 </div>
             </div>
