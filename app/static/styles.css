@@ -889,3 +889,34 @@ h5.restaurant-category {
   pointer-events: auto;
   /* re-enables close button */
 }
+
+.btn-shared {
+  background-color: #7c83ff;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-shared:hover {
+  background-color: #6573e8;
+  color: white;
+}
+
+.page-item.active .page-link {
+  background-color: #7c88ff;
+  border-color: #7c88ff;
+  color: white;
+}
+
+.page-link {
+  color: #7c88ff;
+  border: 1px solid #dee2e6;
+}
+
+.page-link:hover {
+  color: #5a6fd0;
+  background-color: #f1f1ff;
+}
