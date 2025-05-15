@@ -56,6 +56,9 @@
             {{ form.review_image.label }}
             {{ form.review_image(class="form-control") }}
             <div class="form-text text-muted">Optional: Upload a photo of the dish or restaurant.</div>
+            {% for error in form.review_image.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
           </div>
           <div class="mb-3">
             {{ form.comment.label }}
