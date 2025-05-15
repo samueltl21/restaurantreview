@@ -20,7 +20,7 @@
 <!-- Section Start -->
 <div class="section-wrapper-custom">
   <!-- Top Trending -->
-  <h2 class="restaurant-title">🌟 Trending Right Now</h2>
+  <h2 class="restaurant-title">Top 3 Restaurant Based on Review</h2>
   <div class="top-section-custom">
     {% for restaurant, avg_rating in top_restaurants %}
     <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="text-decoration-none text-dark">
