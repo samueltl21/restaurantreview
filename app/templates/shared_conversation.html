@@ -11,8 +11,8 @@
         {% if item.type == "review" %}
         <li class="list-group-item">
           <strong>{{ item.sender.name }}</strong> shared a review:<br>
-          🍽️ <a href="{{ url_for('restaurant_detail', restaurant_id=item.data.restaurant.id) }}">
-            <strong>{{ item.data.restaurant.name }}</strong>
+          🍽️ <a href="{{ url_for('restaurant_detail', restaurant_id=item.data.restaurant.id) }}" class="text-dark fw-bold">
+            {{ item.data.restaurant.name }}
           </a><br>
           ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}<br>
 
@@ -41,7 +41,7 @@
         <div class="mb-2">
           <textarea name="comment" class="form-control" placeholder="Write a comment..." required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Post Comment</button>
+        <button type="submit" class="btn btn-shared">Post Comment</button>
       </form>
     </div>
   </div>
