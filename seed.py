@@ -21,7 +21,7 @@ with app.app_context():
 
     # Restaurants
     rest1 = Restaurant(name="Golden Spoon", location="North Perth", cuisine="Indian", added_by=user1.id, image="Golden_Spoon.jpg")
-    rest2 = Restaurant(name="Midnight Bites", location="Subiaco", cuisine="Arabian", added_by=user2.id, image="Midnight_Bites.jpg")
+    rest2 = Restaurant(name="Midnight Bites", location="Subiaco", cuisine="Italian", added_by=user2.id, image="Midnight_Bites.jpg")
     rest3 = Restaurant(name="The Spice House", location="Mount Lawley", cuisine="Thai", added_by=user3.id, image="The_Spice_House.jpg")
     rest4 = Restaurant(name="Ocean Delight", location="Fremantle", cuisine="Seafood", added_by=user1.id, image="Ocean_Delight.png")
     rest5 = Restaurant(name="FlavorTown", location="Cannington", cuisine="Fusion", added_by=user2.id, image="Flavor_Town.png")
@@ -30,9 +30,9 @@ with app.app_context():
 
     # Reviews
     review1 = Review(date="2025-05-01", rating=4, spend=25.00, user_id=user1.id, restaurant_id=rest1.id, comment="Amazing butter chicken!")
-    review2 = Review(date="2025-05-02", rating=5, spend=30.00, user_id=user2.id, restaurant_id=rest2.id, comment="Great Arabian grill set.")
+    review2 = Review(date="2025-05-02", rating=5, spend=30.00, user_id=user2.id, restaurant_id=rest2.id, comment="Great Pizza.")
     review3 = Review(date="2025-05-03", rating=3, spend=22.50, user_id=user3.id, restaurant_id=rest3.id, comment="Nice Tom Yum soup.")
-    review4 = Review(date="2025-05-04", rating=4, spend=28.00, user_id=user1.id, restaurant_id=rest2.id, comment="Loved the lamb skewers.")
+    review4 = Review(date="2025-05-04", rating=4, spend=28.00, user_id=user1.id, restaurant_id=rest2.id, comment="Loved the pasta.")
     review5 = Review(date="2025-05-05", rating=5, spend=35.00, user_id=user2.id, restaurant_id=rest4.id, comment="Seafood platter was super fresh!")
     review6 = Review(date="2025-05-06", rating=4, spend=27.00, user_id=user3.id, restaurant_id=rest5.id, comment="Interesting fusion dishes.")
     db.session.add_all([review1, review2, review3, review4, review5, review6])
