@@ -353,3 +353,52 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   
+  document.addEventListener("DOMContentLoaded", function () {
+    const editButtons = document.querySelectorAll(".edit-review-btn");
+    const modal = new bootstrap.Modal(document.getElementById("editReviewModal"));
+  
+    editButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const reviewId = button.dataset.reviewId;
+        const rating = button.dataset.rating;
+        const spend = button.dataset.spend;
+        const date = button.dataset.date;
+  
+        document.getElementById("edit-review-id").value = reviewId;
+        document.getElementById("edit-rating").value = rating;
+        document.getElementById("edit-spend").value = spend;
+        document.getElementById("edit-date").value = date;
+  
+        modal.show();
+      });
+    });
+  
+    document.getElementById("editReviewForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+  
+      const reviewId = document.getElementById("edit-review-id").value;
+      const payload = {
+        rating: document.getElementById("edit-rating").value,
+        spend: document.getElementById("edit-spend").value,
+        date: document.getElementById("edit-date").value,
+      };
+  
+      fetch(`/api/review/${reviewId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Review updated successfully!");
+            location.reload(); // Later we can improve this by updating DOM directly
+          } else {
+            alert("Error: " + (data.error || "Failed to update review."));
+          }
+        });
+    });
+  });
+  
