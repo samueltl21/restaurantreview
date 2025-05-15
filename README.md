@@ -29,11 +29,13 @@ python3 seed.py
 flask run
 
 =====
-Testing purposes:
+Testing unittest:
 Do all steps until step 6,
 Then:
-a. Run the unittest: 
+a. Run the unittest for authentication & authorization
 python3 -m tests.test_auth
+b. Run the unittest for restaurant review test
+python3 -m test_restaurant_review.py
 
 =====
 Testing with selenium:

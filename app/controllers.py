@@ -377,19 +377,36 @@ def api_update_review_logic(review_id):
     if review.user_id != current_user.id:
         return jsonify({"success": False, "error": "Unauthorized"}), 403
 
+    #validate and update rating
     review.rating = int(request.form.get("rating", review.rating))
-    review.spend = float(request.form.get("spend", review.spend))
+
+    #validate spend
+    try:
+        spend = float(request.form.get("spend", review.spend))
+        if spend < 0:
+            return jsonify({"success": False, "error": "Spend must be at least 0"}), 400
+        review.spend = spend
+    except ValueError:
+        return jsonify({"success": False, "error": "Invalid spend value"}), 400
+
+    #update date and comment
     review.date = request.form.get("date", review.date)
     review.comment = request.form.get("comment", review.comment)
 
+    #validate and save image file
+    ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
     if "review_image" in request.files:
         file = request.files["review_image"]
         if file and file.filename != "":
+            file_ext = file.filename.rsplit('.', 1)[-1].lower()
+            if file_ext not in ALLOWED_EXTENSIONS:
+                return jsonify({"success": False, "error": "Images only!"}), 400
             filename = secure_filename(file.filename)
             path = os.path.join("app/static/images", filename)
             file.save(path)
             review.image = filename
 
+    #option to delete current image
     if request.form.get("delete_image") == "on":
         review.image = None
 

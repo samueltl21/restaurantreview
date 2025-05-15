@@ -389,11 +389,34 @@ document.addEventListener("DOMContentLoaded", function () {
   
     document.getElementById("editReviewForm").addEventListener("submit", function (e) {
       e.preventDefault();
-  
+
+      // Clear previous error
+      const existingError = document.getElementById("edit-error-message");
+      if (existingError) existingError.remove();
+
       const form = e.target;
       const reviewId = document.getElementById("edit-review-id").value;
       const formData = new FormData(form);
-  
+
+      // Validate spend >= 0
+      const spendInput = document.getElementById("edit-spend");
+      const spend = parseFloat(spendInput.value);
+      if (isNaN(spend) || spend < 0) {
+        return showEditError("Spend must be a number greater than or equal to 0.");
+      }
+
+      // Validate image extension
+      const fileInput = document.getElementById("edit-image");
+      const file = fileInput.files[0];
+      if (file) {
+        const allowedExtensions = ["jpg", "jpeg", "png"];
+        const ext = file.name.split(".").pop().toLowerCase();
+        if (!allowedExtensions.includes(ext)) {
+          return showEditError("Only image files (jpg, jpeg, png) are allowed.");
+        }
+      }
+
+      // If all valid, submit
       fetch(`/api/review/${reviewId}`, {
         method: "POST",
         body: formData
@@ -404,13 +427,24 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Review updated successfully!");
             location.reload();
           } else {
-            alert("Error: " + (data.error || "Failed to update review."));
+            showEditError(data.error || "Failed to update review.");
           }
         })
         .catch(err => {
-          alert("Request failed.");
+          showEditError("Request failed. Please try again.");
           console.error(err);
         });
     });
-  });  
-  
+
+    // Helper to show error message inside modal
+    function showEditError(message) {
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "text-danger mb-2";
+      errorDiv.id = "edit-error-message";
+      errorDiv.textContent = message;
+
+      const modalBody = document.querySelector("#editReviewModal .modal-body");
+      modalBody.prepend(errorDiv);
+    }
+
+  }); 

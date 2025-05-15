@@ -23,13 +23,18 @@
   <h2 class="restaurant-title">Top 3 Restaurant Based on Review</h2>
   <div class="top-section-custom">
     {% for restaurant, avg_rating in top_restaurants %}
-    <a href="{{ url_for('main.restaurant_detail', restaurant_id=restaurant.id) }}" class="text-decoration-none text-dark">
+    <a href="{{ url_for('main.restaurant_detail', restaurant_id=restaurant.id) }}"
+      class="text-decoration-none text-dark">
       <div class="top-card-custom">
         {% if restaurant.image %}
         <img src="{{ url_for('static', filename='images/' ~ restaurant.image) }}" alt="{{ restaurant.name }}">
         {% endif %}
         <p class="mt-2 mb-0"><strong>{{ restaurant.name }}</strong></p>
+        {% if avg_rating is not none %}
         <p class="caption">{{ "%.1f"|format(avg_rating) }} ⭐ average</p>
+        {% else %}
+        <p class="caption">No ratings yet</p>
+        {% endif %}
       </div>
     </a>
     {% endfor %}
@@ -47,7 +52,7 @@
         {{ r.name }}<br />
         <span class="stars">
           {{ "⭐" * rating|int }} {% if rating > 0 %}({{ "%.1f"|format(rating) }}){% endif %}
-        </span>        
+        </span>
       </div>
     </a>
     {% endfor %}
