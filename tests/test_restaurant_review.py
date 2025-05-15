@@ -1,4 +1,6 @@
 import unittest
+import io
+import os
 from app import db, create_app
 from config import TestingConfig
 from app.models import User, Restaurant, Review
@@ -125,6 +127,48 @@ class ReviewTestCase(unittest.TestCase):
         }, follow_redirects=True)
 
         self.assertIn(b'Number must be at least 0', response.data)
+
+    def test_upload_valid_image_review(self):
+        self.login()
+        image_path = os.path.join('app', 'static', 'images', 'home-food.jpg')
+        with open(image_path, 'rb') as img:
+            data = {
+                'restaurant': 'Spicy Noodle House',
+                'location': 'Northbridge',
+                'cuisine': 'Thai',
+                'date': '2025-05-15',
+                'rating': '4',
+                'spend': '29.90',
+                'comment': 'Uploading a valid image!',
+                'submit': 'Submit Rating',
+                'review_image': (img, 'home-food.jpg')
+            }
+            response = self.client.post('/upload_reviews', data=data, content_type='multipart/form-data', follow_redirects=True)
+
+        self.assertIn(b'Thanks for your review!', response.data)
+        review = Review.query.filter_by(user_id=self.user.id, restaurant_id=self.restaurant.id).first()
+        self.assertIsNotNone(review)
+        self.assertEqual(review.comment, 'Uploading a valid image!')
+        self.assertTrue(review.image.endswith('home-food.jpg'))
+
+    def test_upload_invalid_file_review(self):
+        self.login()
+
+        data = {
+            'restaurant': 'Spicy Noodle House',
+            'location': 'Northbridge',
+            'cuisine': 'Thai',
+            'date': '2025-05-15',
+            'rating': '4',
+            'spend': '29.90',
+            'comment': 'Trying to upload invalid file!',
+            'submit': 'Submit Rating',
+            'review_image': (io.BytesIO(b"not an image"), 'document.pdf')
+        }
+
+        response = self.client.post('/upload_reviews', data=data, content_type='multipart/form-data', follow_redirects=True)
+
+        self.assertIn(b'Images only!', response.data)
 
 
 if __name__ == '__main__':
