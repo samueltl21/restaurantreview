@@ -8,23 +8,32 @@
     <div class="col-md-6 col-lg-5">
       <ul class="list-group mb-4">
         {% for item in items %}
-          {% if item.type == "review" %}
-          <li class="list-group-item">
-            <strong>{{ item.sender.name }}</strong> shared a review:<br>
-            🍽️ <a href="{{ url_for('restaurant_detail', restaurant_id=item.data.restaurant.id) }}">
-              <strong>{{ item.data.restaurant.name }}</strong>
-            </a><br>
-            ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}<br>
-            {% if item.data.comment %}
-              📝 <em>{{ item.data.comment }}</em>
-            {% endif %}
-          </li>                    
-          {% elif item.type == "comment" %}
-            <li class="list-group-item">
-              💬 <strong>{{ item.sender.name }}</strong>: {{ item.data.content }}<br>
-              <small class="text-muted">{{ item.data.timestamp }}</small>
-            </li>
+        {% if item.type == "review" %}
+        <li class="list-group-item">
+          <strong>{{ item.sender.name }}</strong> shared a review:<br>
+          🍽️ <a href="{{ url_for('restaurant_detail', restaurant_id=item.data.restaurant.id) }}">
+            <strong>{{ item.data.restaurant.name }}</strong>
+          </a><br>
+          ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}<br>
+
+          {% if item.data.comment %}
+          📝 <em>{{ item.data.comment }}</em><br>
           {% endif %}
+
+          {% if item.data.image %}
+          <div class="mt-2">
+            <img src="{{ url_for('static', filename='images/' ~ item.data.image) }}" alt="Review Image"
+              class="img-fluid rounded" style="max-height: 200px;">
+          </div>
+          {% endif %}
+        </li>
+
+        {% elif item.type == "comment" %}
+        <li class="list-group-item">
+          💬 <strong>{{ item.sender.name }}</strong>: {{ item.data.content }}<br>
+          <small class="text-muted">{{ item.data.timestamp }}</small>
+        </li>
+        {% endif %}
         {% endfor %}
       </ul>
 
