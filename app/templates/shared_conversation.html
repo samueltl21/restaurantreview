@@ -11,7 +11,7 @@
         {% if item.type == "review" %}
         <li class="list-group-item">
           <strong>{{ item.sender.name }}</strong> shared a review:<br>
-          🍽️ <a href="{{ url_for('restaurant_detail', restaurant_id=item.data.restaurant.id) }}" class="text-dark fw-bold">
+          🍽️ <a href="{{ url_for('main.restaurant_detail', restaurant_id=item.data.restaurant.id) }}" class="text-dark fw-bold">
             {{ item.data.restaurant.name }}
           </a><br>
           ⭐ {{ item.data.rating }} | 💸 ${{ "%.2f"|format(item.data.spend) }} | 📅 {{ item.data.date }}<br>

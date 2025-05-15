@@ -25,20 +25,20 @@
                         <a class="nav-link disabled">Hello, {{ current_user.name }}!</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('shared_with') }}">Sharing Page</a>
+                        <a class="nav-link" href="{{ url_for('main.shared_with') }}">Sharing Page</a>
                       </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('profile') }}">My Profile</a>
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('upload_reviews') }}">Rating</a>
+                        <a class="nav-link" href="{{ url_for('main.upload_reviews') }}">Rating</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
                     </li>
                     {% endif %}
                 </ul>
