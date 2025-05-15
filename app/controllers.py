@@ -52,12 +52,12 @@ def upload_restaurant_image_logic(restaurant_id):
 
     if 'image' not in request.files:
         flash('No image uploaded.', 'danger')
-        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+        return redirect(url_for('main.restaurant_detail', restaurant_id=restaurant_id))
 
     file = request.files['image']
     if file.filename == '':
         flash('No selected file.', 'warning')
-        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+        return redirect(url_for('main.restaurant_detail', restaurant_id=restaurant_id))
 
     if file:
         filename = secure_filename(file.filename)
@@ -68,7 +68,7 @@ def upload_restaurant_image_logic(restaurant_id):
         db.session.commit()
 
         flash('Image uploaded successfully!', 'success')
-        return redirect(url_for('restaurant_detail', restaurant_id=restaurant_id))
+        return redirect(url_for('main.restaurant_detail', restaurant_id=restaurant_id))
 
 def index_logic():
     restaurants = (
@@ -96,7 +96,7 @@ def login_logic():
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
         else:
             flash('Invalid email or password!', 'danger')
     return render_template('login.html', form=form)
@@ -110,20 +110,20 @@ def sign_up_logic():
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash('Email already registered!', 'danger')
-            return redirect(url_for('sign_up'))
+            return redirect(url_for('main.sign_up'))
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         new_user = User(name=name, email=email, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
         flash('Sign up successful! Please log in', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     return render_template('sign_up.html', form=form)
 
 def logout_logic():
     logout_user()
     flash('You have been logged out.', 'success')
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
 def upload_reviews_logic():
     form = ReviewForm()
@@ -142,7 +142,7 @@ def upload_reviews_logic():
         existing_review = Review.query.filter_by(user_id=current_user.id, restaurant_id=restaurant.id, date=date).first()
         if existing_review:
             flash("You've already submitted a review for this restaurant on that date", "warning")
-            return redirect(url_for("upload_reviews"))
+            return redirect(url_for("main.upload_reviews"))
         review = Review(rating=rating, date=date, spend=spend, user_id=current_user.id, restaurant_id=restaurant.id)
         file = form.review_image.data
         if file:
@@ -154,7 +154,7 @@ def upload_reviews_logic():
         db.session.add(review)
         db.session.commit()
         flash("Thanks for your review!", "success")
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
     return render_template("upload_reviews.html", form=form)
 
 def profile_logic():
@@ -238,7 +238,7 @@ def share_reviews_logic():
         existing_ids = json.loads(existing_thread.review_ids)
         new_ids = [rid for rid in review_ids if rid not in existing_ids]
         if not new_ids:
-            return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+            return jsonify({"success": True, "url": url_for("main.view_shared_conversation", user_id=recipient_id)})
         combined_ids = existing_ids + new_ids
         existing_thread.review_ids = json.dumps(combined_ids)
         for review_id in new_ids:
@@ -252,7 +252,7 @@ def share_reviews_logic():
                 )
                 db.session.add(entry)
         db.session.commit()
-        return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+        return jsonify({"success": True, "url": url_for("main.view_shared_conversation", user_id=recipient_id)})
 
     else:
         token = str(uuid.uuid4())
@@ -273,13 +273,13 @@ def share_reviews_logic():
             )
             db.session.add(entry)
         db.session.commit()
-        return jsonify({"success": True, "url": url_for("view_shared_conversation", user_id=recipient_id)})
+        return jsonify({"success": True, "url": url_for("main.view_shared_conversation", user_id=recipient_id)})
 
 def view_shared_reviews_logic(token):
     shared = SharedReview.query.filter_by(token=token).first_or_404()
     if current_user.id not in [shared.sender_id, shared.recipient_id]:
         flash("You are not authorized to view this page.", "danger")
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
 
     if request.method == "POST":
         content = request.form.get("comment", "").strip()
@@ -292,7 +292,7 @@ def view_shared_reviews_logic(token):
             )
             db.session.add(new_comment)
             db.session.commit()
-            return redirect(url_for("view_shared_reviews", token=token))
+            return redirect(url_for("main.view_shared_reviews", token=token))
 
     review_ids = list(set(json.loads(shared.review_ids)))
     reviews = Review.query.filter(Review.id.in_(review_ids)).all()
@@ -305,7 +305,7 @@ def view_shared_conversation_logic(user_id):
     other_user = User.query.get_or_404(user_id)
     if other_user.id == current_user.id:
         flash("Cannot view a conversation with yourself.", "warning")
-        return redirect(url_for("profile"))
+        return redirect(url_for("main.profile"))
 
     shared_threads = SharedReview.query.filter(
         ((SharedReview.sender_id == current_user.id) & (SharedReview.recipient_id == other_user.id)) |
@@ -314,7 +314,7 @@ def view_shared_conversation_logic(user_id):
 
     if not shared_threads:
         flash("No shared history found with this user.", "info")
-        return redirect(url_for("shared_with"))
+        return redirect(url_for('main.shared_with'))
 
     shared_thread_ids = [thread.id for thread in shared_threads]
     entry_data = (
@@ -349,7 +349,7 @@ def view_shared_conversation_logic(user_id):
             )
             db.session.add(comment)
             db.session.commit()
-            return redirect(url_for("view_shared_conversation", user_id=other_user.id))
+            return redirect(url_for("main.view_shared_conversation", user_id=other_user.id))
 
     return render_template("shared_conversation.html", other_user=other_user, items=timeline)
 
@@ -361,7 +361,7 @@ def shared_with_logic():
     for thread in threads:
         user_ids.add(thread.sender_id if thread.sender_id != current_user.id else thread.recipient_id)
     users = User.query.filter(User.id.in_(user_ids)).all()
-    return render_template("shared_with.html", shared_users=users, has_shared_users=len(users) > 0)
+    return render_template('shared_with.html', shared_users=users, has_shared_users=len(users) > 0)
 
 def search_users_logic():
     query = request.args.get('q', '').strip().lower()
