@@ -158,19 +158,21 @@ def upload_reviews_logic():
     return render_template("upload_reviews.html", form=form)
 
 def profile_logic():
-    page = request.args.get('page', 1, type=int)
-    per_page = 5  # Or any number of reviews per page
+    from sqlalchemy import desc
 
-    pagination = Review.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page)
-    user_reviews = pagination.items
+    # 🧠 Get all reviews for statistics
+    all_reviews = Review.query.filter_by(user_id=current_user.id).all()
 
+    # 🧠 Initialize containers
     cuisine_counts = {}
     cuisine_spend = {}
     cuisine_spend_count = {}
     total_rating = 0
     total_spend = 0
-    num_reviews = len(user_reviews)
-    for review in user_reviews:
+    num_reviews = len(all_reviews)
+
+    # 🧠 Calculate statistics
+    for review in all_reviews:
         if review.restaurant:
             cuisine = review.restaurant.cuisine
             cuisine_counts[cuisine] = cuisine_counts.get(cuisine, 0) + 1
@@ -178,14 +180,28 @@ def profile_logic():
             cuisine_spend_count[cuisine] = cuisine_spend_count.get(cuisine, 0) + 1
             total_rating += review.rating
             total_spend += review.spend
-    avg_spend_by_cuisine = { cuisine: round(cuisine_spend[cuisine] / cuisine_spend_count[cuisine], 2) for cuisine in cuisine_spend }
+
+    avg_spend_by_cuisine = {
+        cuisine: round(cuisine_spend[cuisine] / cuisine_spend_count[cuisine], 2)
+        for cuisine in cuisine_spend
+    }
+
     cuisine_labels = list(cuisine_counts.keys())
     cuisine_values = list(cuisine_counts.values())
     avg_spend_labels = list(avg_spend_by_cuisine.keys())
     avg_spend_values = list(avg_spend_by_cuisine.values())
     avg_rating = round(total_rating / num_reviews, 1) if num_reviews > 0 else 0
     avg_spend = round(total_spend / num_reviews, 2) if num_reviews > 0 else 0
+
+    # 📄 Paginate reviews for table (3 per page, newest first)
+    page = request.args.get('page', 1, type=int)
+    per_page = 3
+    pagination = Review.query.filter_by(user_id=current_user.id).order_by(desc(Review.date)).paginate(page=page, per_page=per_page)
+    user_reviews = pagination.items
+
+    # 👤 Get list of other users for sharing functionality
     all_users = User.query.filter(User.id != current_user.id).all()
+
     return render_template(
         'profile.html',
         user=current_user,
@@ -196,9 +212,9 @@ def profile_logic():
         avg_rating=avg_rating,
         avg_spend=avg_spend,
         all_users=all_users,
-        reviews=user_reviews,
-        pagination=pagination
-)
+        reviews=user_reviews,         # 👈 paginated 3 reviews
+        pagination=pagination         # 👈 pagination object
+    )
 
 def share_reviews_logic():
     data = request.get_json()
