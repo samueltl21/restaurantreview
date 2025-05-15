@@ -1,19 +1,21 @@
-from app import application, db
+from app import create_app, db
 from app.models import User, Restaurant, Review, SharedReview, SharedReviewEntry, SharedComment
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 import json
 import uuid
 
-with application.app_context():
+app = create_app()
+
+with app.app_context():
     # Reset DB
     db.drop_all()
     db.create_all()
 
     # Users
-    user1 = User(name="testing", email="testing@testing.com", password_hash=generate_password_hash("testing"))
+    user1 = User(name="testing", email="testing@testing.com", password_hash=generate_password_hash("testing_password"))
     user2 = User(name="abc", email="abc@testing.com", password_hash=generate_password_hash("abc"))
-    user3 = User(name="123", email="123@testing.com", password_hash=generate_password_hash("123"))
+    user3 = User(name="123", email="123@testing.com", password_hash=generate_password_hash("1a2b3c"))
     db.session.add_all([user1, user2, user3])
     db.session.commit()
 
