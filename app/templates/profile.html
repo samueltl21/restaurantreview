@@ -67,7 +67,7 @@
         <!-- Right Chart: Average Spend per Cuisine -->
         <div class="col-md-6">
           <div class="card shadow">
-            <div class="card-header bg-success text-white">
+            <div class="card-header bg-primary text-white">
               <h5 class="mb-0">Average Spend per Cuisine</h5>
             </div>
             <div class="card-body d-flex justify-content-center">
@@ -88,174 +88,176 @@
     </div>
 
     <!-- Reviews Table Card with Animation -->
-    <div class="card review-card shadow mb-4 animate-fade-up">
-      <div class="card-header bg-primary text-white">
-        <i class="bi bi-journal-richtext me-2"></i> Your Restaurant Reviews
-      </div>
-      <div class="card-body">
-        <div class="text-center mb-3">
-          <div class="mx-auto mb-3" style="max-width: 300px;">
-            <div class="position-relative">
-              <input type="text" class="form-control" id="recipientUserInput" placeholder="Start typing a user name..."
-                autocomplete="off" />
-              <div id="user-suggestions" class="list-group position-absolute w-100" style="top: 100%; z-index: 1050;">
+    <div class="col-12 mb-4">
+      <div class="card review-card shadow animate-fade-up">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-journal-richtext me-2"></i> Your Restaurant Reviews
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <div class="mx-auto mb-3" style="max-width: 300px;">
+              <div class="position-relative">
+                <input type="text" class="form-control" id="recipientUserInput"
+                  placeholder="Start typing a user name..." autocomplete="off" />
+                <div id="user-suggestions" class="list-group position-absolute w-100" style="top: 100%; z-index: 1050;">
+                </div>
+                <input type="hidden" id="recipientUser" />
               </div>
-              <input type="hidden" id="recipientUser" />
             </div>
+
+            <button id="shareButton" class="btn btn-outline-primary">
+              Share Selected Reviews
+            </button>
           </div>
 
-          <button id="shareButton" class="btn btn-outline-primary">
-            Share Selected Reviews
-          </button>
-        </div>
+          <div class="table-responsive">
+            <table class="table table-hover review-table" id="reviewTable">
+              <thead>
+                <tr>
+                  <th>Share</th>
+                  <th>Date</th>
+                  <th>Restaurant</th>
+                  <th>Location</th>
+                  <th>Cuisine</th>
+                  <th>Rating</th>
+                  <th>Spend</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for review in reviews %}
+                <tr class="table-row-animate">
+                  <td>
+                    <input type="checkbox" class="share-checkbox" value="{{ review.id }}" />
+                  </td>
+                  <td>{{ review.date }}</td>
+                  <td class="fw-bold">
+                    <a href="{{ url_for('restaurant_detail', restaurant_id=review.restaurant.id) }}"
+                      class="text-decoration-none">
+                      {{ review.restaurant.name }}
+                    </a>
+                  </td>
+                  <td>{{ review.restaurant.location }}</td>
+                  <td>
+                    <span class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}">
+                      {{ review.restaurant.cuisine }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="star-rating">
+                      {% for i in range(review.rating) %}
+                      <span class="star filled">★</span>
+                      {% endfor %} {% for i in range(5 - review.rating) %}
+                      <span class="star">★</span>
+                      {% endfor %}
+                    </div>
+                  </td>
+                  <td>${{ "%.2f"|format(review.spend) }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-secondary edit-review-btn" data-review-id="{{ review.id }}"
+                      data-date="{{ review.date }}" data-rating="{{ review.rating }}" data-spend="{{ review.spend }}"
+                      data-comment="{{ review.comment|e }}"
+                      data-image="{{ url_for('static', filename='images/' ~ review.image) if review.image else '' }}">
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
 
-        <div class="table-responsive">
-          <table class="table table-hover review-table" id="reviewTable">
-            <thead>
-              <tr>
-                <th>Share</th>
-                <th>Date</th>
-                <th>Restaurant</th>
-                <th>Location</th>
-                <th>Cuisine</th>
-                <th>Rating</th>
-                <th>Spend</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for review in user.reviews %}
-              <tr class="table-row-animate">
-                <td>
-                  <input type="checkbox" class="share-checkbox" value="{{ review.id }}" />
-                </td>
-                <td>{{ review.date }}</td>
-                <td class="fw-bold">
-                  <a href="{{ url_for('restaurant_detail', restaurant_id=review.restaurant.id) }}"
-                    class="text-decoration-none">
-                    {{ review.restaurant.name }}
-                  </a>
-                </td>
-                <td>{{ review.restaurant.location }}</td>
-                <td>
-                  <span class="badge rounded-pill cuisine-badge {{ review.restaurant.cuisine.lower() }}">
-                    {{ review.restaurant.cuisine }}
-                  </span>
-                </td>
-                <td>
-                  <div class="star-rating">
-                    {% for i in range(review.rating) %}
-                    <span class="star filled">★</span>
-                    {% endfor %} {% for i in range(5 - review.rating) %}
-                    <span class="star">★</span>
-                    {% endfor %}
-                  </div>
-                </td>
-                <td>${{ "%.2f"|format(review.spend) }}</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-secondary edit-review-btn"
-                    data-review-id="{{ review.id }}"
-                    data-date="{{ review.date }}"
-                    data-rating="{{ review.rating }}"
-                    data-spend="{{ review.spend }}"
-                    data-comment="{{ review.comment|e }}"
-                    data-image="{{ url_for('static', filename='images/' ~ review.image) if review.image else '' }}">
-                    Edit
-                  </button>
-                </td>
-              </tr>
+          <!-- Pagination -->
+          <!-- Dynamic Pagination -->
+          {% if pagination.pages > 1 %}
+          <nav aria-label="Review pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('profile', page=pagination.prev_num) }}">Previous</a>
+              </li>
+              {% for p in range(1, pagination.pages + 1) %}
+              <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('profile', page=p) }}">{{ p }}</a>
+              </li>
               {% endfor %}
-            </tbody>
-          </table>
-        </div>
+              <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('profile', page=pagination.next_num) }}">Next</a>
+              </li>
+            </ul>
+          </nav>
+          {% endif %}
 
-        <!-- Pagination -->
-        <nav aria-label="Review pagination" class="mt-4">
-          <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            </li>
-            <li class="page-item active">
-              <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next</a>
-            </li>
-          </ul>
-        </nav>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Pass dynamic data to JS -->
-  <script>
-    const cuisineLabels = {{ cuisine_labels | tojson | safe }};
-    const cuisineValues = {{ cuisine_values | tojson | safe }};
-    const spendLabels = {{ avg_spend_labels | tojson | safe }};
-    const spendValues = {{ avg_spend_values | tojson | safe }};
-  </script>
+    <!-- Pass dynamic data to JS -->
+    <script>
+      const cuisineLabels = {{ cuisine_labels | tojson | safe }};
+      const cuisineValues = {{ cuisine_values | tojson | safe }};
+      const spendLabels = {{ avg_spend_labels | tojson | safe }};
+      const spendValues = {{ avg_spend_values | tojson | safe }};
+    </script>
 
-  <!-- Edit Review Modal -->
-<div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="editReviewLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- ⚠️ enctype added to support image upload -->
-      <form id="editReviewForm" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editReviewLabel">Edit Review</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <input type="hidden" name="review_id" id="edit-review-id" />
-
-          <div class="mb-3">
-            <label for="edit-rating" class="form-label">Rating</label>
-            <input type="number" class="form-control" id="edit-rating" name="rating" min="1" max="5" required />
-          </div>
-
-          <div class="mb-3">
-            <label for="edit-spend" class="form-label">Spend</label>
-            <input type="number" class="form-control" id="edit-spend" name="spend" step="0.01" required />
-          </div>
-
-          <div class="mb-3">
-            <label for="edit-date" class="form-label">Date</label>
-            <input type="date" class="form-control" id="edit-date" name="date" required />
-          </div>
-
-          <div class="mb-3">
-            <label for="edit-comment" class="form-label">Comment</label>
-            <textarea class="form-control" id="edit-comment" name="comment" rows="3"></textarea>
-          </div>
-
-          <div class="mb-3">
-            <label for="edit-image" class="form-label">Update Image</label>
-            <input type="file" class="form-control" id="edit-image" name="review_image" accept="image/*" />
-          </div>
-
-          <div id="existing-image-preview" class="mb-3" style="display: none;">
-            <p>Current Image:</p>
-            <img id="current-review-image" src="" class="img-thumbnail" style="max-height: 150px;">
-            <div class="form-check mt-2">
-              <input class="form-check-input" type="checkbox" name="delete_image" id="delete-image-checkbox">
-              <label class="form-check-label" for="delete-image-checkbox">Delete current image</label>
+    <!-- Edit Review Modal -->
+    <div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="editReviewLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- ⚠️ enctype added to support image upload -->
+          <form id="editReviewForm" enctype="multipart/form-data">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editReviewLabel">Edit Review</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
-        </div>
 
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+            <div class="modal-body">
+              <input type="hidden" name="review_id" id="edit-review-id" />
+
+              <div class="mb-3">
+                <label for="edit-rating" class="form-label">Rating</label>
+                <input type="number" class="form-control" id="edit-rating" name="rating" min="1" max="5" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="edit-spend" class="form-label">Spend</label>
+                <input type="number" class="form-control" id="edit-spend" name="spend" step="0.01" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="edit-date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="edit-date" name="date" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="edit-comment" class="form-label">Comment</label>
+                <textarea class="form-control" id="edit-comment" name="comment" rows="3"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="edit-image" class="form-label">Update Image</label>
+                <input type="file" class="form-control" id="edit-image" name="review_image" accept="image/*" />
+              </div>
+
+              <div id="existing-image-preview" class="mb-3" style="display: none;">
+                <p>Current Image:</p>
+                <img id="current-review-image" src="" class="img-thumbnail" style="max-height: 150px;">
+                <div class="form-check mt-2">
+                  <input class="form-check-input" type="checkbox" name="delete_image" id="delete-image-checkbox">
+                  <label class="form-check-label" for="delete-image-checkbox">Delete current image</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
-</div>
 
-</div>
-{% endblock %}
+  </div>
+  {% endblock %}

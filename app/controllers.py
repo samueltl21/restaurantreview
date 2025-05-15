@@ -158,7 +158,12 @@ def upload_reviews_logic():
     return render_template("upload_reviews.html", form=form)
 
 def profile_logic():
-    user_reviews = Review.query.filter_by(user_id=current_user.id).all()
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Or any number of reviews per page
+
+    pagination = Review.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page)
+    user_reviews = pagination.items
+
     cuisine_counts = {}
     cuisine_spend = {}
     cuisine_spend_count = {}
@@ -181,7 +186,19 @@ def profile_logic():
     avg_rating = round(total_rating / num_reviews, 1) if num_reviews > 0 else 0
     avg_spend = round(total_spend / num_reviews, 2) if num_reviews > 0 else 0
     all_users = User.query.filter(User.id != current_user.id).all()
-    return render_template('profile.html', user=current_user, cuisine_labels=cuisine_labels, cuisine_values=cuisine_values, avg_spend_labels=avg_spend_labels, avg_spend_values=avg_spend_values, avg_rating=avg_rating, avg_spend=avg_spend, all_users=all_users)
+    return render_template(
+        'profile.html',
+        user=current_user,
+        cuisine_labels=cuisine_labels,
+        cuisine_values=cuisine_values,
+        avg_spend_labels=avg_spend_labels,
+        avg_spend_values=avg_spend_values,
+        avg_rating=avg_rating,
+        avg_spend=avg_spend,
+        all_users=all_users,
+        reviews=user_reviews,
+        pagination=pagination
+)
 
 def share_reviews_logic():
     data = request.get_json()
