@@ -20,19 +20,15 @@ class TestNavigationFlow(unittest.TestCase):
         wait = WebDriverWait(driver, 3)
 
         try:
-            # Click "Login" link
+            #login
             wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Login"))).click()
-
-            # Wait for login form to load
             wait.until(EC.presence_of_element_located((By.NAME, "email")))
-
-            # Fill in login form
             driver.find_element(By.NAME, "email").send_keys("testing@testing.com")
             driver.find_element(By.NAME, "password").send_keys("testing_password")
             time.sleep(2)
             driver.find_element(By.CSS_SELECTOR, "form input[type='submit']").click()
 
-            # Confirm login by checking "My Profile" is visible
+            #checking that my profile is visible after login
             time.sleep(3)
             body = driver.find_element(By.TAG_NAME, "body").text
             self.assertIn("My Profile", body)

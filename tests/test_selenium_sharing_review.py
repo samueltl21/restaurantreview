@@ -77,7 +77,7 @@ class TestNavigationFlow(unittest.TestCase):
             wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Sharing Page"))).click()
             time.sleep(3)
 
-            #find and click 'View Conversation' for user 'testing'
+            #find and click 'view conversation' for user 'testing'
             conversation_blocks = driver.find_elements(By.CSS_SELECTOR, ".list-group-item")
             found = False
 

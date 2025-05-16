@@ -160,10 +160,10 @@ def upload_reviews_logic():
 def profile_logic():
     from sqlalchemy import desc
 
-    # 🧠 Get all reviews for statistics
+    #get all reviews for statistics
     all_reviews = Review.query.filter_by(user_id=current_user.id).all()
 
-    # 🧠 Initialize containers
+    #initialize containers
     cuisine_counts = {}
     cuisine_spend = {}
     cuisine_spend_count = {}
@@ -171,7 +171,7 @@ def profile_logic():
     total_spend = 0
     num_reviews = len(all_reviews)
 
-    # 🧠 Calculate statistics
+    #calculate statistics
     for review in all_reviews:
         if review.restaurant:
             cuisine = review.restaurant.cuisine
@@ -193,13 +193,13 @@ def profile_logic():
     avg_rating = round(total_rating / num_reviews, 1) if num_reviews > 0 else 0
     avg_spend = round(total_spend / num_reviews, 2) if num_reviews > 0 else 0
 
-    # 📄 Paginate reviews for table (3 per page, newest first)
+    #paginate reviews for table
     page = request.args.get('page', 1, type=int)
     per_page = 3
     pagination = Review.query.filter_by(user_id=current_user.id).order_by(desc(Review.date)).paginate(page=page, per_page=per_page)
     user_reviews = pagination.items
 
-    # 👤 Get list of other users for sharing functionality
+    #get list of other users for sharing functionality
     all_users = User.query.filter(User.id != current_user.id).all()
 
     return render_template(
@@ -212,8 +212,8 @@ def profile_logic():
         avg_rating=avg_rating,
         avg_spend=avg_spend,
         all_users=all_users,
-        reviews=user_reviews,         # 👈 paginated 3 reviews
-        pagination=pagination         # 👈 pagination object
+        reviews=user_reviews,
+        pagination=pagination
     )
 
 def share_reviews_logic():
