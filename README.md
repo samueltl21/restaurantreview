@@ -90,11 +90,11 @@ To ensure the application functions correctly, you can run the following tests:
 
 2. **Run Selenium Tests**
    ```bash
-   python3 -m unittest tests.test_selenium_login
-   python3 -m unittest tests.test_selenium_navigating_after_login
-   python3 -m unittest tests.test_selenium_navigating_without_login
-   python3 -m unittest tests.test_selenium_sharing_review
-   python3 -m unittest tests.test_selenium_edit_review
+   python -m unittest tests.test_selenium_login
+   python -m unittest tests.test_selenium_navigating_after_login
+   python -m unittest tests.test_selenium_navigating_without_login
+   python -m unittest tests.test_selenium_sharing_review
+   python -m unittest tests.test_selenium_edit_review
    ```
    - The test results will be displayed in the browser.
 
