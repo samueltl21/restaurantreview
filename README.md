@@ -54,11 +54,15 @@ To launch the application, follow these steps:
    ```bash
    pip install -r requirements.txt
    ```
-6. **Load initial data**
+6. **Set SECRET_KEY in environment**
+   ```bash
+   export SECRET_KEY=restaurant12345
+   ```
+7. **Load initial data**
    ```bash
    python3 seed.py
    ```
-7. **Run the Flask application**
+8. **Run the Flask application**
    ```bash
    flask run
    ```
