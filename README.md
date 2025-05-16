@@ -14,6 +14,7 @@ The primary goal of this platform is to offer users a reliable source of restaur
 - **Review Submission and Management**: Users can submit reviews, rate restaurants, and edit their contributions, allowing for a dynamic and interactive community of food enthusiasts.
 - **Data Visualization**: Personalized interactive charts and graphs to visualize each user's dining preferences and patterns.
 - **Profile Management**: Users can manage their profiles, including viewing their review history and preferences, enhancing the personalization of their experience on the platform.
+- **Review Sharing**: Users can share their reviews with other users, fostering community engagement and collaboration.
 
 ## Group Members
 
