@@ -41,13 +41,13 @@ To launch the application, follow these steps:
    python3 -m venv application-env
    ```
 4. **Activate the virtual environment**
-   - On macOS:
+   - On macOS/Linux:
      ```bash
      source application-env/bin/activate
      ```
    - On Windows:
      ```bash
-     application-env\Scripts\activate
+     .\application-env\Scripts\activate
      ```
 5. **Install the required dependencies**
    ```bash
