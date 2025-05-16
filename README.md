@@ -2,11 +2,22 @@
 
 ## Description
 
-The Restaurant Review Application is a web-based platform designed to allow users to browse, review, and share their experiences at various restaurants. The application is built using Flask, a lightweight WSGI web application framework in Python. It features user authentication and authorization, enabling users to create accounts, log in, and manage their reviews. The design focuses on providing a user-friendly interface for seamless navigation and interaction.
+The Restaurant Review Application is a web-based platform designed to connect food enthusiasts and provide a space for sharing honest reviews and discovering new dining experiences. The platform aims to foster a community of food lovers who can explore and contribute to a growing database of restaurant reviews.
+
+### Purpose
+
+The primary goal of this platform is to offer users a reliable source of restaurant reviews, helping them make informed dining decisions. By allowing users to share their experiences, the application promotes transparency and trust within the community.
+
+### Main Features
+
+- **User Authentication and Authorization**: Secure login and account management for personalized experiences, ensuring that each user's data is protected and accessible only to them.
+- **Review Submission and Management**: Users can submit reviews, rate restaurants, and edit their contributions, allowing for a dynamic and interactive community of food enthusiasts.
+- **Data Visualization**: Personalized interactive charts and graphs to visualize each user's dining preferences and patterns.
+- **Profile Management**: Users can manage their profiles, including viewing their review history and preferences, enhancing the personalization of their experience on the platform.
 
 ## Group Members
 
-| UWA ID   | Name                  | GitHub Username |
+| Student ID   | Name                  | GitHub Username |
 |----------|-----------------------|-----------------|
 | 24452249 | Samuel Theodore       | samueltl21      |
 | 24139199 | Mengting Zhang        | ZHMETI          |
@@ -80,5 +91,5 @@ To ensure the application functions correctly, you can run the following tests:
    python3 -m unittest tests.test_selenium_sharing_review
    python3 -m unittest tests.test_selenium_edit_review
    ```
-   - The results will be displayed in the browser.
+   - The test results will be displayed in the browser.
 
