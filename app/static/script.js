@@ -1,4 +1,4 @@
-// JavaScript for the login page
+// javascript for login, signup, and review pages
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
@@ -199,7 +199,7 @@ function showUploadForm() {
     document.getElementById("upload-form").style.display = "block";
 }
 
-// ✅ ADDITION — Share Selected Reviews (ADD AT THE VERY END ONLY)
+// share selected reviews
 
 function showCopiedFeedback(link) {
     if (navigator.clipboard) {
