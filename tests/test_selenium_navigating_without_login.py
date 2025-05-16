@@ -26,35 +26,34 @@ class TestGuestAccessFlow(unittest.TestCase):
         wait = WebDriverWait(driver, 10)
 
         try:
-            # 1. Homepage scroll to restaurant section (below banner)
+            #homepage  then scroll below the banner
             driver.get("http://127.0.0.1:5000/")
-            driver.execute_script("window.scrollBy(0, 600);")  # Scroll past banner
+            driver.execute_script("window.scrollBy(0, 600);")
             time.sleep(2)
 
-            # Go to a known restaurant detail page
+            #go to restaurant detail page
             driver.get("http://127.0.0.1:5000/restaurants/4")
             time.sleep(2)
-            self.assertIn("Reviews", driver.page_source)  # or use known restaurant name
-
-            # Scroll to bottom of restaurant page
+            self.assertIn("Reviews", driver.page_source)
             driver.execute_script("window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });")
             time.sleep(2)
 
-            # 2. Access protected page: shared_with
+            #go to shared with page
             driver.get("http://127.0.0.1:5000/shared_with")
             time.sleep(2)
             self.assertIn("Login", driver.page_source)
 
-            # 3. Access profile
+            #access profile page
             driver.get("http://127.0.0.1:5000/profile")
             time.sleep(2)
             self.assertIn("Login", driver.page_source)
 
-            # 4. Access upload_reviews
+            #access rating page
             driver.get("http://127.0.0.1:5000/upload_reviews")
             time.sleep(2)
             self.assertIn("Login", driver.page_source)
 
+            #access about us page
             about_us_link = wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "About Us")))
             driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", about_us_link)
             time.sleep(2)
